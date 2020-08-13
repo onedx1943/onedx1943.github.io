@@ -1,0 +1,30 @@
+.icons-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 180px);
+    gap: 20px;
+    place-content: center;
+    place-items: center;
+    width: 1660px;
+    margin: auto;
+}
+
+.icon-content {
+    width: 180px;
+    height: 180px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: xx-large;
+    flex-direction: column;
+}
+
+.icon-content:hover {
+    background-color: aliceblue;
+}
+
+.icon-content > i {
+    margin: 20px;
+}
+.icon-content > span {
+    font-size: small;
+}
