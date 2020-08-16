@@ -4,15 +4,22 @@
     <meta charset="UTF-8">
     <title>icons</title>
     <link rel="stylesheet" href="../static/css/icons.css">
-    <link rel="stylesheet" href="../static/extension/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../static/script/extension/font-awesome-4.7.0/css/font-awesome.min.css">
 </head>
 <body>
     <div><a href="../index.html">Home</a></div>
-    <div>
-        <div id="icons_list" class="icons-list"></div>
-    </div>
+    <div id="icons_content"></div>
 
-    <script src="../static/script/jquery-3.5.1.min.js"></script>
+    <script type="text/template" id="icon_item_template">
+        <div class="icons-list">
+            <% _.each(data, function(name){ %>
+                <div class="icon-content"><i class="fa <%-name%>"></i><span><%-name%></span></div>
+            <% }) %>
+        </div>
+    </script>
+
+    <script src="../static/script/extension/jquery-3.5.1.min.js"></script>
+    <script src="../static/script/extension/underscore-min.js"></script>
     <script src="../static/script/onedx/icons.js"></script>
 </body>
 </html>

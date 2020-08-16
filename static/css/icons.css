@@ -1,16 +1,16 @@
 .icons-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 180px);
+    grid-template-columns: repeat(auto-fill, 160px);
     gap: 20px;
     place-content: center;
     place-items: center;
-    width: 1660px;
+    width: 1450px;
     margin: auto;
 }
 
 .icon-content {
-    width: 180px;
-    height: 180px;
+    width: 160px;
+    height: 140px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -24,7 +24,11 @@
 
 .icon-content > i {
     margin: 20px;
+    font-size: 30px;
 }
 .icon-content > span {
-    font-size: small;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
