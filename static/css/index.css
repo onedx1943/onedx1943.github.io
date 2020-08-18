@@ -1,3 +1,35 @@
+/*Home*/
+html, body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+div#app {
+    height: 100%;
+}
+.home-content {
+    height: 100%;
+    background: url(../image/bg003.jpg) no-repeat fixed top;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.home-content-button {
+    color: #fff;
+    background-color: #2ea44f;
+    box-shadow: 0 1px 0 rgba(27,31,35,.1), inset 0 1px 0 hsla(0,0%,100%,.03);
+    padding: 5px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid rgba(27,31,35,.15);
+    border-radius: 6px;
+    text-decoration: none;
+}
+
 .router-link-active {
     color: red;
 }
