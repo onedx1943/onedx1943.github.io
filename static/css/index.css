@@ -1,0 +1,48 @@
+.router-link-active {
+    color: red;
+}
+
+.icons-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 160px);
+    gap: 20px;
+    place-content: center;
+    place-items: center;
+    max-width: 1450px;
+    margin: auto;
+    color: #717171;
+}
+
+.icon-content {
+    width: 160px;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: xx-large;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.icon-content:hover {
+    background-color: aliceblue;
+}
+
+.icon-content > i {
+    margin: 0 20px 20px;
+    font-size: 30px;
+}
+.icon-content > span {
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.test-chart {
+    width: 1500px;
+    height: 400px;
+}
+.time-chart {
+    height: 100px;
+}

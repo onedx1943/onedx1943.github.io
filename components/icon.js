@@ -1,8 +1,41 @@
 export default {
-    data () {
+    data: function () {
+        // 获取所有的css文件并筛选出font awesome对应的文件
+        let css_files = document.styleSheets;
+        let icon_list = [];
+        for (let css_file of css_files) {
+            if (css_file.href.includes('font-awesome.min.css')) {
+                let rules = css_file.cssRules;
+                for (let rule of rules) {
+                    if (rule.selectorText && rule.selectorText.endsWith('::before')) {
+                        icon_list.push(rule.selectorText.slice(1, rule.selectorText.indexOf('::')));
+                    }
+                }
+            }
+        }
         return {
-            msg: "我是 icon 组件"
+            icon_list: icon_list
         }
     },
-    template: '<div><h1>icon</h1><p>{{msg}}</p></div>'
+    template: `
+        <div class="icons-list">
+            <div class="icon-content" v-for="icon in icon_list" :key="icon" @click="copyIconName(icon)">
+                <i class="fa" :class="icon"></i>
+                <span>{{ icon }}}</span>
+            </div>
+        </div>
+    `,
+    methods: {
+        copyIconName: function (name) {
+            let input = document.createElement("input");
+            input.setAttribute('display', 'none');
+            document.body.appendChild(input);
+            input.setAttribute('value', name);
+            input.select();
+            if (document.execCommand('copy')) {
+                document.execCommand('copy');
+            }
+            document.body.removeChild(input);
+        }
+    },
 }
