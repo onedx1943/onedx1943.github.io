@@ -9,7 +9,8 @@ div#app {
 }
 .home-content {
     height: 100%;
-    background: url(../image/bg003.jpg) no-repeat fixed top;
+    background: url(../image/bg010.jpg) no-repeat fixed top;
+    background-size: 100% 100%;
     display: flex;
     justify-content: space-around;
     align-items: center;

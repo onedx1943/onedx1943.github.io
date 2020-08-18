@@ -21,7 +21,7 @@ export default {
         <div class="icons-list">
             <div class="icon-content" v-for="icon in icon_list" :key="icon" @click="copyIconName(icon)">
                 <i class="fa" :class="icon"></i>
-                <span>{{ icon }}}</span>
+                <span>{{ icon }}</span>
             </div>
         </div>
     `,
