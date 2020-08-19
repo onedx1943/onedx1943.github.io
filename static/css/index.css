@@ -64,7 +64,7 @@ div#app {
     background-color: #2ea44f;
 }
 .page-app, .page-blog {
-    margin-top: 50px;
+    padding-top: 50px;
 }
 
 .router-link-active {
@@ -90,8 +90,7 @@ div#app {
   .app-sidebar {
     position: fixed;
     background-color: #f9f9f9;
-    height: 100%;
-    top: 0;
+    top: 51px;
     left: 0;
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
     transition: all 0.4s cubic-bezier(0.4, 0, 0, 1);
@@ -157,7 +156,7 @@ div#app {
 }
 
 .novel_content > pre {
-    overflow: scroll;
+    overflow-y: scroll;
     max-height: 600px;
     width: 1000px;
     word-wrap: break-word;
