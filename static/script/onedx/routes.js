@@ -2,7 +2,9 @@
 import Home from '../../../components/Home.js';
 
 import App from '../../../components/App.js';
+import AppIndex from '../../../components/AppIndex.js';
 import AppIcon from '../../../components/AppIcon.js';
+import AppNovels from '../../../components/AppNovels.js';
 import AppTest from '../../../components/AppTest.js';
 
 import Blog from '../../../components/Blog.js';
@@ -12,8 +14,9 @@ const routes = [
     { path: '/', component: Home },
     { path: '/app', component: App,
       children: [
-          { path: '/', component: AppIcon },
+          { path: '/', component: AppIndex },
           { path: 'icon', component: AppIcon },
+          { path: 'novel', component: AppNovels },
           { path: 'test', component: AppTest },
       ]
     },

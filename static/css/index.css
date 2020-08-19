@@ -10,7 +10,7 @@ div#app {
 .home-content {
     height: 100%;
     background: url(../image/bg010.jpg) no-repeat fixed top;
-    background-size: 100% 100%;
+    background-size: cover;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -30,9 +30,72 @@ div#app {
     border-radius: 6px;
     text-decoration: none;
 }
+/*Header*/
+.page-header {
+    background-color: cornflowerblue;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index:999;
+}
+.header-container {
+    padding: 0 20px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.header-container-button {
+    margin: 10px;
+}
+.header-container-button > a {
+    color: #fff;
+    padding: 5px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 30px;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 6px;
+    text-decoration: none;
+}
+.header-container-button > a:hover {
+    background-color: #2ea44f;
+}
+.page-app, .page-blog {
+    margin-top: 50px;
+}
 
 .router-link-active {
     color: red;
+}
+/*APP*/
+.app-container {
+    position: relative;
+    z-index: 1;
+    padding: 0 60px 30px;
+    overflow-x: hidden;
+}
+.app-sidebar {
+    position: fixed;
+    z-index: 10;
+    top: 51px;
+    left: 0;
+    bottom: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.app-sidebar-inner {
+    width: 260px;
+    padding: 35px 0 60px 20px;
+}
+
+.app-item-content {
+    position: relative;
+    padding: 35px 0;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 .icons-list {
@@ -73,9 +136,23 @@ div#app {
 }
 
 .test-chart {
-    width: 1500px;
+    width: 1400px;
     height: 400px;
 }
 .time-chart {
     height: 100px;
+}
+
+.novel_content > pre {
+    overflow: scroll;
+    max-height: 600px;
+    width: 1000px;
+    word-wrap: break-word;
+    word-break: break-word;
+    white-space: break-spaces;
+    background-color: aliceblue;
+    padding: 20px;
+}
+.novel-list .active-novel {
+    color: #2ea44f;
 }

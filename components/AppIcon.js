@@ -14,15 +14,19 @@ export default {
             }
         }
         return {
-            icon_list: icon_list
+            icon_list: icon_list,
+            icon_msg: '似乎没找到css文件 (ノへ￣、)',
         }
     },
     template: `
-        <div class="icons-list">
+        <div class="icons-list" v-if="icon_list.length > 0">
             <div class="icon-content" v-for="icon in icon_list" :key="icon" @click="copyIconName(icon)">
                 <i class="fa" :class="icon"></i>
                 <span>{{ icon }}</span>
             </div>
+        </div>
+        <div class="icons-msg" v-else>
+            {{ icon_msg }}
         </div>
     `,
     methods: {
