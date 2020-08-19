@@ -68,7 +68,11 @@ export default {
                 .then(function (response) {
                     let reg = /.*[第]{1,2}[0-9零○一二两三四五六七八九十百千廿卅卌壹贰叁肆伍陆柒捌玖拾佰仟万１２３４５６７８９０]{1,5}[章节節堂讲回集部分品]{1,2}.*/g;
                     let chapter = response.data.match(reg);
-                    chapter.unshift('');
+                    if (chapter) {
+                        chapter.unshift('');
+                    } else {
+                        chapter = [''];
+                    }
                     _this.novel_chapter = chapter;
                     _this.novel_content = response.data.split(reg);
                     _this.novel_page = 1;

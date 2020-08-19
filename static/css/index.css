@@ -86,6 +86,19 @@ div#app {
     overflow-x: hidden;
     overflow-y: auto;
 }
+@media screen and (max-width: 1750px) {
+  .app-sidebar {
+    position: fixed;
+    background-color: #f9f9f9;
+    height: 100%;
+    top: 0;
+    left: 0;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0, 1);
+    -webkit-transform: translate(-280px, 0);
+    transform: translate(-280px, 0);
+  }
+}
 .app-sidebar-inner {
     width: 260px;
     padding: 35px 0 60px 20px;
@@ -152,6 +165,13 @@ div#app {
     white-space: break-spaces;
     background-color: aliceblue;
     padding: 20px;
+}
+
+.novel-list > div {
+    cursor: pointer;
+}
+.novel-list > div:hover {
+    color: cornflowerblue;
 }
 .novel-list .active-novel {
     color: #2ea44f;
