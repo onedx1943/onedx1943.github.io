@@ -63,8 +63,12 @@ div#app {
 .header-container-button > a:hover {
     background-color: #2ea44f;
 }
+.page-container {
+    height: 100%;
+}
 .page-app, .page-blog {
     padding-top: 50px;
+    height: calc(100% - 80px);
 }
 
 .router-link-active {
@@ -75,7 +79,9 @@ div#app {
     position: relative;
     z-index: 1;
     padding: 0 60px 30px;
+    height: 100%;
     overflow-x: hidden;
+    overflow-y: overlay;
 }
 .app-sidebar {
     position: fixed;
@@ -84,30 +90,29 @@ div#app {
     left: 0;
     bottom: 0;
     overflow-x: hidden;
-    overflow-y: auto;
-}
-@media screen and (max-width: 1750px) {
-  .app-sidebar {
-    position: fixed;
+    overflow-y: overlay;
     background-color: #f9f9f9;
-    top: 51px;
-    left: 0;
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
     transition: all 0.4s cubic-bezier(0.4, 0, 0, 1);
-    -webkit-transform: translate(-280px, 0);
-    transform: translate(-280px, 0);
-  }
 }
 .app-sidebar-inner {
     width: 260px;
-    padding: 35px 0 60px 20px;
+    padding: 35px 20px 60px;
 }
-
 .app-item-content {
     position: relative;
-    padding: 35px 0;
+    padding: 35px 0 35px 300px;
     max-width: 1400px;
     margin: 0 auto;
+    transition: padding-left 0.4s cubic-bezier(0.4, 0, 0, 1);
+}
+@media screen and (max-width: 1750px) {
+    .app-sidebar {
+        transform: translate(-300px, 0);
+    }
+    .app-item-content {
+        padding-left: 0;
+    }
 }
 
 .icons-list {
@@ -156,7 +161,7 @@ div#app {
 }
 
 .novel_content > pre {
-    overflow-y: scroll;
+    overflow-y: overlay;
     max-height: 600px;
     width: 1000px;
     word-wrap: break-word;
@@ -165,7 +170,10 @@ div#app {
     background-color: aliceblue;
     padding: 20px;
 }
-
+.novel-list {
+    height: 500px;
+    overflow-y: overlay;
+}
 .novel-list > div {
     cursor: pointer;
 }
@@ -174,4 +182,8 @@ div#app {
 }
 .novel-list .active-novel {
     color: #2ea44f;
+}
+#canvas {
+    width: 300px;
+    height: 150px;
 }

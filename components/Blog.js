@@ -5,7 +5,7 @@ export default {
         }
     },
     template: `
-        <div>
+        <div class="page-container">
             <page-header></page-header>
             <div class="page-blog">
                 <div>这是Blog页</div>

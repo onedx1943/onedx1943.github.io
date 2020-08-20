@@ -28,7 +28,7 @@ export default {
                     <pre>{{ novel_content[novel_page - 1] }}</pre>
                 </div>
             </div>
-            <div v-else>
+            <div v-else-if="novel_chapter.length > 0">
                 <button @click="novel_page=1,input_page=1"><i class="fa fa-rotate-right"></i></button>
             </div>
         </div>

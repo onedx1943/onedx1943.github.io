@@ -15,3 +15,13 @@ Vue.component('page-header', {
         
     `
 });
+// page-sidebar 插槽
+Vue.component('page-sidebar', {
+    template: `
+        <div class="app-sidebar">
+            <div class="app-sidebar-inner">
+                <slot></slot>
+            </div>
+        </div>
+    `
+});
