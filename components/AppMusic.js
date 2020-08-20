@@ -12,7 +12,7 @@ export default {
     template: `
         <div>
             <div><canvas id="canvas"></canvas></div>
-            <div>{{ tips_msg }}</div>
+            <div class="tips-msg">{{ tips_msg }}</div>
             <div>
                 <button @click="preMusic()"><i class="fa fa-backward"></i></button>
                 <button @click="playMusic()"><i class="fa fa-play"></i></button>
@@ -179,6 +179,11 @@ export default {
             if (this.audioContext != null) {
                 this.audioContext.close();
                 this.audioContext = null;
+                let canvas = document.getElementById('canvas'),
+                    cwidth = canvas.width,
+                    cheight = canvas.height - 2;
+                let ctx = canvas.getContext('2d');
+                ctx.clearRect(0,0,cwidth,cheight);
             }
         },
     },

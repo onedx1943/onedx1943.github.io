@@ -187,3 +187,6 @@ div#app {
     width: 300px;
     height: 150px;
 }
+.tips-msg {
+    height: 26px;
+}
