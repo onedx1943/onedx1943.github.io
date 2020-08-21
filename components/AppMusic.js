@@ -1,16 +1,22 @@
 export default {
     data: function () {
         return {
-            music_api: 'https://api.github.com/repos/onedx1943/Music/contents',///CloudMusic/xixi
+            music_api: 'https://api.github.com/repos/onedx1943/Music/contents',
             music_list: [],
             music_msg: '正在读取文件...',
             tips_msg: '',
             audioContext: null,
-            play_num: 0
+            play_num: 0,
+            custom_api: 'https://api.github.com/repos/onedx1943/Music/contents', // https://api.github.com/repos/onedx1943/Music/contents/CloudMusic/xixi
         }
     },
     template: `
         <div>
+            <div>
+                <label>从自定义链接获取音乐：</label>
+                <input v-model="custom_api" class="custom_api_input">
+                <button @click="loadCustomApi()"><i class="fa fa-flash"></i></button>
+            </div>
             <div><canvas id="canvas"></canvas></div>
             <div class="tips-msg">{{ tips_msg }}</div>
             <div>
@@ -36,9 +42,17 @@ export default {
         window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame;
         this.getMusicList(this.music_api);
     },
+    beforeDestroy: function () {
+        // 组件销毁前结束播放
+        if (this.audioContext != null) {
+            this.audioContext.close();
+            this.audioContext = null;
+        }
+    },
     methods: {
         getMusicList: function (file_api) {
             let _this = this;
+            _this.music_msg = '别着急，正在查找音乐文件！';
             axios.get(file_api)
                 .then(function (response) {
                     for(let i = 0; i < response.data.length; i++){
@@ -57,12 +71,13 @@ export default {
                 })
                 .catch(function (error) {
                     console.log(error);
+                    _this.music_msg = '链接有问题吧，读取失败了！';
                 });
         },
         getMusicContent: function (event, music_url) {
             // fa-pause
             let _this = this;
-            _this.tips_msg = '正在加载。。。';
+            _this.tips_msg = '正在远程读取文件，要等个几秒到几十秒的，不要急!!!';
             $('.novel-list .active-novel').removeClass('active-novel');
             $(event.currentTarget).addClass('active-novel');
             axios({
@@ -83,11 +98,11 @@ export default {
                 }
 
                 let audioContext = _this.audioContext;
+                _this.tips_msg = '正在解码...';
                 audioContext.decodeAudioData(response.data, function(buffer) {
                     //解码成功则调用此函数，参数buffer为解码后得到的结果
                     //调用_visualize进行下一步处理
                     _this._visualize(audioContext, buffer);
-                    _this.tips_msg = '';
                 }, function(e) {
                     //这个是解码失败会调用的函数
                     console.log("!哎玛，文件解码失败:(");
@@ -107,6 +122,7 @@ export default {
             //将上一步解码得到的buffer数据赋值给source
             audioBufferSourceNode.buffer = buffer;
             //播放
+            this.tips_msg = '';
             audioBufferSourceNode.start(0);
             //音乐响起后，把analyser传递到另一个方法开始绘制频谱图了，因为绘图需要的信息要从analyser里面获取
             this._drawSpectrum(analyser);
@@ -122,7 +138,7 @@ export default {
                 meterNum = 800 / (10 + 2), //频谱条数量
                 capYPositionArray = []; //将上一画面各帽头的位置保存到这个数组
             let ctx = canvas.getContext('2d'),
-                gradient = ctx.createLinearGradient(0, 0, 0, 300);
+                gradient = ctx.createLinearGradient(0, 0, 0, 800);
             gradient.addColorStop(1, '#0f0');
             gradient.addColorStop(0.5, '#ff0');
             gradient.addColorStop(0, '#f00');
@@ -186,5 +202,13 @@ export default {
                 ctx.clearRect(0,0,cwidth,cheight);
             }
         },
+        loadCustomApi: function (file_api) {
+            // 检测链接合法性
+
+            // 停止正在播放的音乐，并重新加载列表
+            this.stopMusic();
+            this.music_list = [];
+            this.getMusicList(this.custom_api);
+        }
     },
 }
