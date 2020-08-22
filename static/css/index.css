@@ -3,6 +3,13 @@ html, body {
     height: 100%;
     padding: 0;
     margin: 0;
+    font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
+    font-size: 1rem;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #304455;
+    background-color: #fff;
+    scroll-behavior: smooth;
 }
 div#app {
     height: 100%;
@@ -16,7 +23,7 @@ div#app {
     align-items: center;
 }
 .home-content-button {
-    color: #fff;
+    color: white;
     background-color: #2ea44f;
     box-shadow: 0 1px 0 rgba(27,31,35,.1), inset 0 1px 0 hsla(0,0%,100%,.03);
     padding: 5px 16px;
@@ -38,8 +45,17 @@ div#app {
     top: 0;
     z-index:999;
 }
+.menu-button {
+    display: none;
+    position: fixed;
+    color: #fff;
+    height: 26px;
+    width: 26px;
+    top: 12px;
+    left: 12px;
+}
 .header-container {
-    padding: 0 20px;
+    padding: 0 50px;
     margin: auto;
     display: flex;
     justify-content: space-between;
@@ -49,7 +65,7 @@ div#app {
     margin: 10px;
 }
 .header-container-button > a {
-    color: #fff;
+    color: white;
     padding: 5px 16px;
     font-size: 14px;
     font-weight: 500;
@@ -61,7 +77,9 @@ div#app {
     text-decoration: none;
 }
 .header-container-button > a:hover {
+    color: white;
     background-color: #2ea44f;
+    text-decoration: none;
 }
 .page-container {
     height: 100%;
@@ -69,10 +87,6 @@ div#app {
 .page-app, .page-blog {
     padding-top: 50px;
     height: calc(100% - 80px);
-}
-
-.router-link-active {
-    color: red;
 }
 /*APP*/
 .app-container {
@@ -83,7 +97,8 @@ div#app {
     overflow-x: hidden;
     overflow-y: overlay;
 }
-.app-sidebar {
+/*sidebar*/
+.page-sidebar {
     position: fixed;
     z-index: 10;
     top: 51px;
@@ -95,9 +110,24 @@ div#app {
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
     transition: all 0.4s cubic-bezier(0.4, 0, 0, 1);
 }
-.app-sidebar-inner {
+.page-sidebar-inner {
     width: 260px;
     padding: 35px 20px 60px;
+}
+.page-sidebar-inner a {
+    display: block;
+    color: #304455;
+    padding: 5px 16px;
+    white-space: nowrap;
+    cursor: pointer;
+    text-decoration: none;
+}
+.page-sidebar-inner a.router-link-active {
+    color: red;
+}
+.page-sidebar-inner a:hover {
+    color: #2ea44f;
+    text-decoration: none;
 }
 .app-item-content {
     position: relative;
@@ -107,14 +137,41 @@ div#app {
     transition: padding-left 0.4s cubic-bezier(0.4, 0, 0, 1);
 }
 @media screen and (max-width: 1750px) {
-    .app-sidebar {
+    .menu-button {
+        display: block;
+    }
+    .page-sidebar {
         transform: translate(-300px, 0);
     }
     .app-item-content {
         padding-left: 0;
     }
+    .page-sidebar.open {
+        transform: translate(0, 0);
+    }
 }
-
+/*scroll-top*/
+.scroll-top-button {
+    cursor: pointer;
+    position: fixed;
+    line-height: 40px;
+    bottom: 50px;
+    right: 50px;
+    color: #fff;
+    background-color: rgba(0,0,0,.6);
+    padding: 0 8px;
+    transition: background-color .2s ease;
+    border-radius: 4px;
+}
+.scroll-top-button > span {
+    display: inline-flex;
+    height: 24px;
+    line-height: 24px;
+    width: 24px;
+    justify-content: center;
+    align-items: center;
+}
+/*icons*/
 .icons-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, 160px);
@@ -151,31 +208,49 @@ div#app {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-
-.test-chart {
-    width: 1400px;
-    height: 400px;
-}
-.time-chart {
-    height: 100px;
-}
-
-.novel_content > pre {
-    overflow-y: overlay;
-    max-height: 600px;
-    width: 1000px;
-    word-wrap: break-word;
-    word-break: break-word;
-    white-space: break-spaces;
+/*novel*/
+.novel-header-collapse {
     background-color: aliceblue;
-    padding: 20px;
+    padding: 0 15px;
+}
+.novel-custom {
+    display: flex;
+    justify-content: space-between;
+    background-color: #f8f8f8;
+    padding: 10px 20px;
+    border-bottom: 1px dotted black;
+}
+.novel-custom span {
+    display: inline-block;
+    height: 38px;
+    line-height: 38px;
+    padding-right: 10px;
+    overflow: hidden;
+}
+.novel-custom input {
+    flex-grow: 1;
+}
+.novel-header {
+    display: flex;
+    justify-content: space-between;
+    background-color: #f8f8f8;
+}
+.novel-header > div {
+    flex: 1 1 auto;
+    width: 100%;
+    font-size: 17px;
+    font-family: 'Microsoft YaHei', Arial, sans-serif;;
 }
 .novel-list {
-    height: 500px;
+    height: 200px;
     overflow-y: overlay;
+    margin: 10px;
+    padding-right: 21px;
 }
 .novel-list > div {
     cursor: pointer;
+    white-space: nowrap;
+    overflow-x: hidden;
 }
 .novel-list > div:hover {
     color: cornflowerblue;
@@ -183,6 +258,95 @@ div#app {
 .novel-list .active-novel {
     color: #2ea44f;
 }
+.novel-setting {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+}
+.novel-setting > div {
+    width: 300px;
+    overflow: hidden;
+    margin: 3px;
+}
+.novel-setting > div select, .novel-setting > div input {
+    width: 200px;
+}
+.novel-container {
+    margin-top: 20px;
+}
+.novel-container input[type="number"]{
+    width: 100px;
+}
+.novel-container .btn-primary:not(:disabled):not(.disabled):active:focus {
+    box-shadow: none;
+}
+.novel-container .btn:focus {
+    box-shadow: none;
+}
+.chapter-menu {
+    float: right;
+    position: relative;
+}
+.chapter-menu > span {
+    display: inline-block;
+    height: 38px;
+    line-height: 38px;
+    margin: 0 15px;
+}
+.chapter-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 100px);
+    gap: 20px;
+    justify-content: center;
+    place-items: center;
+    width: 1100px;
+    margin: auto;
+    color: #717171;
+    position: absolute;
+    top: 40px;
+    right: 1px;
+    background-color: #f5edd4;
+    height: 319px;
+    overflow: overlay;
+    padding: 20px;
+    border: 1px solid;
+    visibility: hidden;
+}
+.chapter-list.open {
+    visibility: visible;
+}
+.chapter-list-content {
+    width: 100px;
+    height: 38px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.chapter-list-content:hover {
+    color: cornflowerblue;
+}
+.novel_chapter {
+    padding: 10px;
+    font-size: 24px;
+    font-weight: 600;
+}
+.novel_content > pre {
+    overflow-y: overlay;
+    max-height: 600px;
+    width: 100%;
+    word-break: break-word;
+    white-space: break-spaces;
+    background-color: #f5edd4;
+    padding: 20px;
+}
+
+/*music*/
 #canvas {
     width: 500px;
     height: 100px;
@@ -194,4 +358,12 @@ div#app {
 
 .custom_api_input {
     width: 600px;
+}
+/*test*/
+.test-chart {
+    width: 1400px;
+    height: 400px;
+}
+.time-chart {
+    height: 100px;
 }

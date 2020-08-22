@@ -23,13 +23,16 @@ export default {
                     </div>
                 </div>
             </div>
+            <scroll-top></scroll-top>
         </div>
     `,
     created: function () {
 
     },
     mounted: function () {
-
+        $(".app-item-content").on("click", function () {
+            $(".page-sidebar").toggleClass("open", false);
+        })
     },
     methods: {
 

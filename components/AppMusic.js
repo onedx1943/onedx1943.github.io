@@ -13,7 +13,7 @@ export default {
     template: `
         <div>
             <div>
-                <label>从自定义链接获取音乐：</label>
+                <label>从自定义github仓获取音乐：</label>
                 <input v-model="custom_api" class="custom_api_input">
                 <button @click="loadCustomApi()"><i class="fa fa-flash"></i></button>
             </div>
@@ -59,7 +59,7 @@ export default {
                         if (response.data[i].name.endsWith('.mp3') || response.data[i].name.endsWith('.flac')) {
                             _this.music_list.push(response.data[i])
                         } else if (response.data[i].type === 'dir') {
-                            let new_url = _this.music_api + '/' + response.data[i].path;
+                            let new_url = file_api + '/' + response.data[i].path;
                             _this.getMusicList(new_url);
                         }
                     }
@@ -109,6 +109,7 @@ export default {
                 });
             }).catch(function (error) {
                 console.log(error);
+                _this.tips_msg = '完了~取文件失败了';
             });
         },
         _visualize: function(audioContext, buffer) {
