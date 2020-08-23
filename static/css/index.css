@@ -423,8 +423,23 @@ div#app {
     flex-grow: 1;
     margin: 0 15px;
 }
-.show-list-button {
+.control-button {
     margin-left: 10px;
+}
+.volume-control {
+    position: relative;
+}
+.volume-control-container {
+    display: none;
+    position: absolute;
+    top: 38px;
+    width: 134px;
+    padding: 10px;
+    background: #000000aa;
+    border-radius: 6px;
+}
+.volume-bar {
+    cursor: pointer;
 }
 .music-list {
     height: 450px;

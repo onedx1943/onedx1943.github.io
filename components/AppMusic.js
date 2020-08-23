@@ -19,6 +19,8 @@ export default {
             start_time: 0,
             duration_time: 0,
             current_time: 0,
+            volume: 0.5,
+            gainNode: null,
         }
     },
     template: `
@@ -45,18 +47,28 @@ export default {
                 <div class="music-progress-container">
                     <span>{{ current_time | formatSeconds }}</span>
                     <div class="progress music-progress">
-                        <div class="progress-bar bg-danger"></div>
+                        <div class="progress-bar"></div>
                     </div>
                     <span>{{ duration_time | formatSeconds }}</span>
                 </div>
-                <div>
+                <div class="volume-control">
+                    <button class="btn btn-primary btn-sm" @click="$('.volume-control-container').slideToggle()">
+                        <i class="fa fa-volume-up"></i>
+                    </button>
+                    <div class="volume-control-container">
+                        <div class="progress volume-bar" @click="resizeVolume($event)">
+                            <div class="progress-bar" :style="formatVolume"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-button">
                     <button class="btn btn-primary btn-sm" @click="switchModel()">
                         <i v-if="play_model === 0" class="fa fa-sort-amount-asc"></i>
                         <i v-else-if="play_model === 1" class="fa fa-rotate-right"></i>
                         <i v-else class="fa fa-random"></i>
                     </button>
                 </div>
-                <div class="show-list-button">
+                <div class="control-button">
                     <button class="btn btn-primary btn-sm" @click="$('.music-list').slideToggle()"><i class="fa fa-th-list"></i></button>
                 </div>
             </div>
@@ -88,7 +100,12 @@ export default {
             let second = value % 60;
             time_list.push(second > 9 ? second : '0' + second);
             return time_list.join(':')
-        }
+        },
+    },
+    computed: {
+        formatVolume: function () {
+            return {width: this.volume * 100 + '%'}
+        },
     },
     beforeDestroy: function () {
         // 组件销毁前结束播放
@@ -164,22 +181,28 @@ export default {
         _visualize: function(audioContext, buffer) {
             let audioBufferSourceNode = audioContext.createBufferSource(),
                 analyser = audioContext.createAnalyser(),
+                gainNode = audioContext.createGain(),  // 创建一个GainNode,它可以控制音频的总音量
                 _this = this;
             _this.duration_time = Math.round(buffer.duration);
             _this.current_time = 0;
             clearInterval(_this.timer);
-            _this.start_time = Math.round(audioBufferSourceNode.context.currentTime);
+            _this.start_time = Math.round(audioContext.currentTime);
             _this.timer = setInterval(function () {
-                _this.current_time = Math.round(audioBufferSourceNode.context.currentTime) - _this.start_time;
+                _this.current_time = Math.round(audioContext.currentTime) - _this.start_time;
                 let percent = (_this.current_time / _this.duration_time * 100).toFixed(2) + '%';
                 $('.music-progress .progress-bar').css('width', percent);
             }, 1000);
-            //将source与分析器连接
+            //将source与分析器以及音量进行关联
+            audioBufferSourceNode.connect(gainNode);
             audioBufferSourceNode.connect(analyser);
             //将分析器与destination连接，这样才能形成到达扬声器的通路
-            analyser.connect(audioContext.destination);
+            // audioContext.destination返回AudioDestinationNode对象，表示当前audioContext中所有节点的最终节点，一般表示音频渲染设备
+            gainNode.connect(audioContext.destination);
             //将上一步解码得到的buffer数据赋值给source
             audioBufferSourceNode.buffer = buffer;
+            //设置音量
+            gainNode.gain.linearRampToValueAtTime(_this.volume, audioContext.currentTime + 1);
+            _this.gainNode = gainNode;
             //播放
             if (!audioBufferSourceNode.start) {
                 audioBufferSourceNode.start = audioBufferSourceNode.noteOn; //in old browsers use noteOn method
@@ -340,6 +363,12 @@ export default {
             } else {
                 this.tips_msg = '别瞎填链接~';
                 this.music_msg = '链接格式：https://api.github.com/repos/用户名/仓库名/contents（仓库内具体路径可以接着加 /xxx/xxx）';
+            }
+        },
+        resizeVolume: function (event) {
+            this.volume = event.offsetX / $(event.currentTarget).width();
+            if (this.gainNode != null) {
+                this.gainNode.gain.linearRampToValueAtTime(this.volume, this.audioContext.currentTime + 1);
             }
         },
     },
