@@ -125,7 +125,7 @@ export default {
                     </div>
                     <div class="chapter-menu">
                         <span>总页数：{{ novel_chapter.length }}</span>
-                        <button class="btn btn-primary btn-sm" @click="$('.chapter-list').toggleClass('open');"><i class="fa fa-th"></i></button>
+                        <button class="btn btn-primary btn-sm" @click="showChapterMenu()"><i class="fa fa-th"></i></button>
                         <div class="chapter-list" v-if="novel_chapter.length > 0">
                             <div class="chapter-list-content" v-for="(name, index) in novel_chapter" :key="index" @click="jumpChapter(index)">
                                 <span>{{ index | chapter }}</span>
@@ -166,13 +166,13 @@ export default {
                         if (response.data[i].name.endsWith('.txt')) {
                             _this.novel_list.push(response.data[i])
                         } else if (response.data[i].type === 'dir') {
-                            let new_url = file_api + '/' + response.data[i].path;
+                            let new_url = file_api + '/' + response.data[i].name;
                             _this.getNovelList(new_url);
                         }
                     }
                 })
                 .catch(function (error) {
-                    _this.novel_msg = '链接有问题吧，读取失败了！';
+                    _this.novel_msg = '网络或者链接有问题啊，读取失败了！';
                     console.log(error);
                 });
         },
@@ -187,12 +187,20 @@ export default {
             _this.input_page = 1;
             axios.get(novel_url)
                 .then(function (response) {
+                    if (response.data == '') {
+                        _this.novel_content = ['该文件内容为空，还是看看别的吧'];
+                        return
+                    }
                     let reg = /.*[第]{1,2}[0-9零○一二两三四五六七八九十百千廿卅卌壹贰叁肆伍陆柒捌玖拾佰仟万１２３４５６７８９０]{1,5}[章节節堂讲回集部分品]{1,2}.*/g;
                     let chapter = response.data.match(reg);
                     if (chapter) {
                         chapter.unshift('');
                     } else {
                         chapter = [''];
+                        if (response.data.length > 1024 * 1024) {
+                            _this.novel_content = ['没找到章节名，而且内容还挺大，是不是文件编码有问题'];
+                            return
+                        }
                     }
                     _this.novel_chapter = chapter;
                     _this.novel_content = response.data.split(reg);
@@ -222,7 +230,6 @@ export default {
         inputChange: function() {
             if (this.input_page == '') {
                 this.input_page = 1;
-
             }
             if (this.input_page < 1) {
                 this.input_page = 1;
@@ -259,9 +266,14 @@ export default {
             $('.novel_content pre').animate({scrollTop: 0});
             sessionStorage.setItem(this.novel_name, this.novel_page);
         },
-        loadCustomApi: function (file_api) {
+        showChapterMenu: function () {
+            let Chapter_menu = $('.chapter-list');
+            Chapter_menu.css('width', $('.novel_content').width());
+            Chapter_menu.toggleClass('open');
+        },
+        loadCustomApi: function () {
             // 检测链接合法性
-
+            let reg = new RegExp("^https://api.github.com/repos/[0-9a-z_!~*'().&=+$%-]+/[0-9a-z_!~*'().&=+$%-]+/contents(/[0-9a-z_!~*'().&=+$%-]+)*$", 'i');
             // 清空原有的txt，并重新加载列表
             this.novel_name = '';
             this.novel_chapter = [];
@@ -269,7 +281,15 @@ export default {
             this.novel_page = 0;
             this.input_page = 0;
             this.novel_list = [];
-            this.getNovelList(this.custom_api);
+            if (reg.test(this.custom_api)) {
+                this.getNovelList(this.custom_api);
+            } else {
+                this.novel_msg = '别瞎填链接~';
+                this.novel_page = 1;
+                this.input_page = 1;
+                this.novel_chapter = [''];
+                this.novel_content = ['链接格式：https://api.github.com/repos/用户名/仓库名/contents（仓库内具体路径可以接着加 /xxx/xxx）'];
+            }
         }
     },
 }

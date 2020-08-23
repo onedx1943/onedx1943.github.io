@@ -6,7 +6,6 @@ import AppIndex from '../../../components/AppIndex.js';
 import AppIcon from '../../../components/AppIcon.js';
 import AppNovels from '../../../components/AppNovels.js';
 import AppMusic from '../../../components/AppMusic.js';
-import AppTest from '../../../components/AppTest.js';
 
 import Blog from '../../../components/Blog.js';
 
@@ -19,7 +18,6 @@ const routes = [
           { path: 'icon', component: AppIcon },
           { path: 'novel', component: AppNovels },
           { path: 'music', component: AppMusic },
-          { path: 'test', component: AppTest },
       ]
     },
     { path: '/blog', component: Blog },

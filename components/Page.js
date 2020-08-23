@@ -43,6 +43,23 @@ Vue.component('scroll-top', {
                 <i class="fa fa-arrow-up"></i>
             </span>
         </div>
-        
     `,
+    created: function () {
+        this.debouncedScroll = _.debounce(this.showScrollButton, 300);
+    },
+    mounted: function () {
+        let _this = this;
+        $('.app-container').scroll(function(){
+            _this.debouncedScroll();
+        })
+    },
+    methods: {
+        showScrollButton: function () {
+            if($('.app-container').scrollTop() > 2000){
+                $('.scroll-top-button').show();
+            } else {
+                $('.scroll-top-button').hide();
+            }
+        }
+    }
 });

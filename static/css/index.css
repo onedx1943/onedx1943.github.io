@@ -44,6 +44,7 @@ div#app {
     width: 100%;
     top: 0;
     z-index:999;
+    transition: top 0.4s cubic-bezier(0.4, 0, 0, 1);
 }
 .menu-button {
     display: none;
@@ -53,6 +54,9 @@ div#app {
     width: 26px;
     top: 12px;
     left: 12px;
+}
+.menu-button i {
+    cursor: pointer;
 }
 .header-container {
     padding: 0 50px;
@@ -86,7 +90,19 @@ div#app {
 }
 .page-app, .page-blog {
     padding-top: 50px;
-    height: calc(100% - 80px);
+    height: calc(100% - 0px);
+    transition: padding-top 0.4s cubic-bezier(0.4, 0, 0, 1);
+}
+@media screen and (max-height: 400px) {
+    .page-header {
+        top: -55px;
+    }
+    .menu-button {
+        top: -55px;
+    }
+    .page-app, .page-blog {
+        padding-top: 0;
+    }
 }
 /*APP*/
 .app-container {
@@ -152,6 +168,7 @@ div#app {
 }
 /*scroll-top*/
 .scroll-top-button {
+    display: none;
     cursor: pointer;
     position: fixed;
     line-height: 40px;
@@ -162,6 +179,7 @@ div#app {
     padding: 0 8px;
     transition: background-color .2s ease;
     border-radius: 4px;
+    z-index: 9999;
 }
 .scroll-top-button > span {
     display: inline-flex;
@@ -288,6 +306,7 @@ div#app {
 .chapter-menu {
     float: right;
     position: relative;
+    display: flex;
 }
 .chapter-menu > span {
     display: inline-block;
@@ -308,7 +327,7 @@ div#app {
     top: 40px;
     right: 1px;
     background-color: #f5edd4;
-    height: 319px;
+    max-height: 319px;
     overflow: overlay;
     padding: 20px;
     border: 1px solid;
@@ -347,23 +366,82 @@ div#app {
 }
 
 /*music*/
-#canvas {
-    width: 500px;
-    height: 100px;
+.music-header-collapse {
+    background-color: aliceblue;
+    padding: 0 15px;
+}
+.music-custom {
+    display: flex;
+    justify-content: space-between;
+    background-color: #f8f8f8;
+    padding: 10px 20px;
+    border-bottom: 1px dotted black;
+}
+.music-custom span {
+    display: inline-block;
+    height: 38px;
+    line-height: 38px;
+    padding-right: 10px;
+    overflow: hidden;
+}
+.music-custom input {
+    flex-grow: 1;
+}
+#music_canvas {
+    padding: 0 10px;
+    background-color: #272822;
 }
 .tips-msg {
     height: 26px;
     color: red;
+    margin: 10px 10px 15px;
+    white-space: nowrap;
+    overflow: hidden;
 }
-
-.custom_api_input {
-    width: 600px;
+.music-control .btn-primary:not(:disabled):not(.disabled):active:focus {
+    box-shadow: none;
 }
-/*test*/
-.test-chart {
-    width: 1400px;
-    height: 400px;
+.music-control .btn:focus {
+    box-shadow: none;
 }
-.time-chart {
-    height: 100px;
+.music-control {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 10px 0;
+}
+.music-control button {
+    width: 38px;
+}
+.music-progress-container {
+    flex-grow: 1;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+}
+.music-progress {
+    flex-grow: 1;
+    margin: 0 15px;
+}
+.show-list-button {
+    margin-left: 10px;
+}
+.music-list {
+    height: 450px;
+    overflow-y: overlay;
+    margin: 10px 0;
+}
+.music-list > div {
+    cursor: pointer;
+    white-space: nowrap;
+    overflow-x: hidden;
+    background-color: aliceblue;
+    box-shadow: 0 0 2px rgba(0,0,0,0.2);
+    padding: 0 20px;
+}
+.music-list > div:hover {
+    color: cornflowerblue;
+}
+.music-list .active-music {
+    color: #2ea44f;
 }
