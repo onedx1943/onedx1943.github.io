@@ -318,7 +318,13 @@ export default {
                 this.audioContext.close();
                 this.audioContext = null;
             }
-            this.status = 0
+            this.status = 0;
+            // 清空画布
+            let canvas = document.getElementById('music_canvas'),
+                c_width = canvas.width,
+                c_height = canvas.height - 2;
+            let ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, c_width, c_height);
         },
         switchModel: function () {
             this.play_model = (this.play_model + 1) % 3;
