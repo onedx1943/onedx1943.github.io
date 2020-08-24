@@ -35,13 +35,14 @@ export default {
             duration_time: 0,
             current_time: 0,
             volume: 0.5,
+            muted: false,
             gainNode: null,
         }
     },
 
     computed: {
         formatVolume: function () {
-            return {width: this.volume * 100 + '%'}
+            return {width: (!this.muted) * this.volume * 100 + '%'}
         },
     },
 
@@ -323,10 +324,18 @@ export default {
             }
         },
 
+        mutedPage: function () {
+            this.muted = !this.muted;
+            if (this.gainNode && this.audioContext) {
+                this.gainNode.gain.linearRampToValueAtTime(this.volume * (!this.muted), this.audioContext.currentTime + 1);
+            }
+        },
+
         resizeVolume: function (event) {
+            this.muted = false;
             this.volume = event.offsetX / $(event.currentTarget).width();
             if (this.gainNode && this.audioContext) {
-                this.gainNode.gain.linearRampToValueAtTime(this.volume, this.audioContext.currentTime + 1);
+                this.gainNode.gain.linearRampToValueAtTime(this.volume * (!this.muted), this.audioContext.currentTime + 1);
             }
         },
     },
@@ -359,25 +368,23 @@ export default {
                     </div>
                     <span>{{ duration_time | formatSeconds }}</span>
                 </div>
-                <div class="volume-control">
-                    <button class="btn btn-primary btn-sm" @click="$('.volume-control-container').slideToggle()">
-                        <i class="fa fa-volume-up"></i>
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-primary volume-control-button" @click="mutedPage()">
+                        <i class="fa" :class="muted ? 'fa-volume-off' : 'fa-volume-up'"></i>
                     </button>
                     <div class="volume-control-container">
                         <div class="progress volume-bar" @click="resizeVolume($event)">
                             <div class="progress-bar" :style="formatVolume"></div>
                         </div>
                     </div>
-                </div>
-                <div class="control-button">
-                    <button class="btn btn-primary btn-sm" @click="switchModel()">
-                        <i v-if="play_model === 0" class="fa fa-sort-amount-asc"></i>
+                    <button class="btn btn-primary control-button" @click="switchModel()">
+                        <i v-if="play_model === 0" class="fa fa-sort-numeric-asc"></i>
                         <i v-else-if="play_model === 1" class="fa fa-rotate-right"></i>
                         <i v-else class="fa fa-random"></i>
                     </button>
-                </div>
-                <div class="control-button">
-                    <button class="btn btn-primary btn-sm" @click="$('.music-list').slideToggle()"><i class="fa fa-th-list"></i></button>
+                    <button class="btn btn-primary control-button" @click="$('.music-list').slideToggle()">
+                        <i class="fa fa-th-list"></i>
+                    </button>
                 </div>
             </div>
             <div class="music-list" v-if="music_list.length > 0">

@@ -427,17 +427,17 @@ div#app {
 .control-button {
     margin-left: 10px;
 }
-.volume-control {
-    position: relative;
+.music-control > .btn-group > .volume-control-button,
+.music-control > .btn-group > .control-button{
+    background-color: white!important;
+    color: #464646!important;
+    border: 0;
+    text-align: left;
 }
 .volume-control-container {
-    display: none;
-    position: absolute;
-    top: 38px;
+    height: 38px;
     width: 134px;
     padding: 10px;
-    background: #000000aa;
-    border-radius: 0 0 6px 6px;
 }
 .volume-bar {
     cursor: pointer;
@@ -461,6 +461,18 @@ div#app {
 }
 .music-list .active-music {
     color: #2ea44f;
+}
+@media screen and (max-width: 1750px) {
+    #music_canvas {
+        width: 1400px;
+        height: 250px;
+    }
+}
+@media screen and (max-width: 1520px) {
+    #music_canvas {
+        width: calc(100vw - 120px);
+        height: 250px;
+    }
 }
 @media screen and (min-height: 601px) {
     .music-list {
