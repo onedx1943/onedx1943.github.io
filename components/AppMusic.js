@@ -367,7 +367,7 @@ export default {
         },
         resizeVolume: function (event) {
             this.volume = event.offsetX / $(event.currentTarget).width();
-            if (this.gainNode != null) {
+            if (this.gainNode && this.audioContext) {
                 this.gainNode.gain.linearRampToValueAtTime(this.volume, this.audioContext.currentTime + 1);
             }
         },
