@@ -4,6 +4,21 @@ export default {
             msg: '',
         }
     },
+
+    created: function () {
+
+    },
+
+    mounted: function () {
+        $(".app-item-content").on("click", function () {
+            $(".page-sidebar").toggleClass("open", false);
+        })
+    },
+
+    methods: {
+
+    },
+
     template: `
         <div class="page-container">
             <page-header></page-header>
@@ -25,15 +40,5 @@ export default {
             <scroll-top></scroll-top>
         </div>
     `,
-    created: function () {
 
-    },
-    mounted: function () {
-        $(".app-item-content").on("click", function () {
-            $(".page-sidebar").toggleClass("open", false);
-        })
-    },
-    methods: {
-
-    }
 }

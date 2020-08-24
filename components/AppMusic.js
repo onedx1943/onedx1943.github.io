@@ -1,4 +1,19 @@
 export default {
+    filters: {
+        formatSeconds: function (value) {
+            let time_list = [];//Hour minute second
+            let hour = Math.floor(value / 3600);
+            if (hour !== 0) {
+                time_list.push(hour > 9 ? hour : '0' + hour);
+            }
+            let minute = Math.floor((value % 3600) / 60);
+            time_list.push(minute > 9 ? minute : '0' + minute);
+            let second = value % 60;
+            time_list.push(second > 9 ? second : '0' + second);
+            return time_list.join(':')
+        },
+    },
+
     data: function () {
         return {
             music_api: 'https://api.github.com/repos/onedx1943/Music/contents',
@@ -23,64 +38,13 @@ export default {
             gainNode: null,
         }
     },
-    template: `
-        <div>
-            <div class="music-header-collapse" data-toggle="collapse" data-target=".music-header"><i class="fa fa-tasks"></i></div>
-            <div class="collapse show music-header">
-                <div class="music-custom">
-                    <span>从自定义github仓获取音乐：</span>
-                    <input v-model="custom_api">
-                    <button class="btn btn-primary btn-sm" @click="loadCustomApi()"><i class="fa fa-flash"></i></button>
-                </div>
-                <div><canvas id="music_canvas" width="1080" height="250"></canvas></div>
-            </div>
-            <div class="tips-msg">{{ tips_msg }}</div>
-            <div class="music-control">
-                <div class="btn-group btn-group-sm">
-                    <button class="btn btn-primary" @click="playMusic()">
-                        <i class="fa" :class="{'fa-pause': status == 1, 'fa-play': status != 1}"></i>
-                    </button>
-                    <button class="btn btn-primary" @click="stopMusic(true)"><i class="fa fa-stop"></i></button>
-                    <button class="btn btn-primary" @click="preMusic()"><i class="fa fa-backward"></i></button>
-                    <button class="btn btn-primary" @click="nextMusic()"><i class="fa fa-forward"></i></button>
-                </div>
-                <div class="music-progress-container">
-                    <span>{{ current_time | formatSeconds }}</span>
-                    <div class="progress music-progress">
-                        <div class="progress-bar"></div>
-                    </div>
-                    <span>{{ duration_time | formatSeconds }}</span>
-                </div>
-                <div class="volume-control">
-                    <button class="btn btn-primary btn-sm" @click="$('.volume-control-container').slideToggle()">
-                        <i class="fa fa-volume-up"></i>
-                    </button>
-                    <div class="volume-control-container">
-                        <div class="progress volume-bar" @click="resizeVolume($event)">
-                            <div class="progress-bar" :style="formatVolume"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="control-button">
-                    <button class="btn btn-primary btn-sm" @click="switchModel()">
-                        <i v-if="play_model === 0" class="fa fa-sort-amount-asc"></i>
-                        <i v-else-if="play_model === 1" class="fa fa-rotate-right"></i>
-                        <i v-else class="fa fa-random"></i>
-                    </button>
-                </div>
-                <div class="control-button">
-                    <button class="btn btn-primary btn-sm" @click="$('.music-list').slideToggle()"><i class="fa fa-th-list"></i></button>
-                </div>
-            </div>
-            <div class="music-list" v-if="music_list.length > 0">
-                <div v-for="(music, index) in music_list"
-                    :index="index"
-                    :key="music.name"
-                    @click="getMusicContent($event, music.download_url)">{{ index + 1 }}. {{ music.name }}</div>
-            </div>
-            <div v-else>{{ music_msg }}</div>
-        </div>
-    `,
+
+    computed: {
+        formatVolume: function () {
+            return {width: this.volume * 100 + '%'}
+        },
+    },
+
     mounted: function () {
         //fix browser vender for AudioContext and requestAnimationFrame
         window.AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.msAudioContext;
@@ -88,25 +52,7 @@ export default {
         window.cancelAnimationFrame = window.cancelAnimationFrame || window.webkitCancelAnimationFrame || window.mozCancelAnimationFrame || window.msCancelAnimationFrame;
         this.getMusicList(this.music_api);
     },
-    filters: {
-        formatSeconds: function (value) {
-            let time_list = [];//Hour minute second
-            let hour = Math.floor(value / 3600);
-            if (hour !== 0) {
-                time_list.push(hour > 9 ? hour : '0' + hour);
-            }
-            let minute = Math.floor((value % 3600) / 60);
-            time_list.push(minute > 9 ? minute : '0' + minute);
-            let second = value % 60;
-            time_list.push(second > 9 ? second : '0' + second);
-            return time_list.join(':')
-        },
-    },
-    computed: {
-        formatVolume: function () {
-            return {width: this.volume * 100 + '%'}
-        },
-    },
+
     beforeDestroy: function () {
         // 组件销毁前结束播放
         this.stopMusic(true);
@@ -115,6 +61,7 @@ export default {
             this.audioContext = null;
         }
     },
+
     methods: {
         getMusicList: function (file_api) {
             let _this = this;
@@ -135,6 +82,7 @@ export default {
                     _this.music_msg = '网络或者链接有问题啊，读取失败了！';
                 });
         },
+
         getMusicContent: function (event, music_url) {
             let _this = this;
             $('.music-list .active-music').removeClass('active-music');
@@ -178,6 +126,7 @@ export default {
                 _this.tips_msg = '完了~取文件失败了';
             });
         },
+
         _visualize: function(audioContext, buffer) {
             let audioBufferSourceNode = audioContext.createBufferSource(),
                 analyser = audioContext.createAnalyser(),
@@ -218,6 +167,7 @@ export default {
             // 绘制频谱图
             this._drawSpectrum(analyser);
         },
+
         _drawSpectrum: function(analyser) {
             let _this = this,
                 canvas = document.getElementById('music_canvas'),
@@ -273,6 +223,7 @@ export default {
             };
             this.animationId = requestAnimationFrame(drawMeter);
         },
+
         _audioEnd: function() {
             this.status = 0;
             // 如果是强制停止则不再播放下一首
@@ -290,6 +241,7 @@ export default {
                 this.playMusic();
             }
         },
+
         preMusic: function () {
             if (this.play_model === 2) {
                 this.play_num = Math.floor(Math.random() * this.music_list.length);
@@ -301,6 +253,7 @@ export default {
             }
             $('div[index=' + this.play_num + ']').click();
         },
+
         playMusic: function () {
             if (this.status === 0) {
                 $('div[index=' + this.play_num + ']').click();
@@ -312,6 +265,7 @@ export default {
                 this.status = 1
             }
         },
+
         nextMusic: function () {
             if (this.play_model === 2) {
                 this.play_num = Math.floor(Math.random() * this.music_list.length);
@@ -323,6 +277,7 @@ export default {
             }
             $('div[index=' + this.play_num + ']').click();
         },
+
         stopMusic: function (value) {
             // 是否强制停止，不再播放下一首
             this.forceStop = value;
@@ -349,9 +304,11 @@ export default {
             let ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, c_width, c_height);
         },
+
         switchModel: function () {
             this.play_model = (this.play_model + 1) % 3;
         },
+
         loadCustomApi: function () {
             // 检测链接合法性
             let reg = new RegExp("^https://api.github.com/repos/[0-9a-z_!~*'().&=+$%-]+/[0-9a-z_!~*'().&=+$%-]+/contents(/[0-9a-z_!~*'().&=+$%-]+)*$", 'i');
@@ -365,6 +322,7 @@ export default {
                 this.music_msg = '链接格式：https://api.github.com/repos/用户名/仓库名/contents（仓库内具体路径可以接着加 /xxx/xxx）';
             }
         },
+
         resizeVolume: function (event) {
             this.volume = event.offsetX / $(event.currentTarget).width();
             if (this.gainNode && this.audioContext) {
@@ -372,4 +330,63 @@ export default {
             }
         },
     },
+
+    template: `
+        <div>
+            <div class="music-header-collapse" data-toggle="collapse" data-target=".music-header"><i class="fa fa-tasks"></i></div>
+            <div class="collapse show music-header">
+                <div class="music-custom">
+                    <span>从自定义github仓获取音乐：</span>
+                    <input v-model="custom_api">
+                    <button class="btn btn-primary btn-sm" @click="loadCustomApi()"><i class="fa fa-flash"></i></button>
+                </div>
+                <div><canvas id="music_canvas" width="1080" height="250"></canvas></div>
+            </div>
+            <div class="tips-msg">{{ tips_msg }}</div>
+            <div class="music-control">
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-primary" @click="playMusic()">
+                        <i class="fa" :class="{'fa-pause': status == 1, 'fa-play': status != 1}"></i>
+                    </button>
+                    <button class="btn btn-primary" @click="stopMusic(true)"><i class="fa fa-stop"></i></button>
+                    <button class="btn btn-primary" @click="preMusic()"><i class="fa fa-backward"></i></button>
+                    <button class="btn btn-primary" @click="nextMusic()"><i class="fa fa-forward"></i></button>
+                </div>
+                <div class="music-progress-container">
+                    <span>{{ current_time | formatSeconds }}</span>
+                    <div class="progress music-progress">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <span>{{ duration_time | formatSeconds }}</span>
+                </div>
+                <div class="volume-control">
+                    <button class="btn btn-primary btn-sm" @click="$('.volume-control-container').slideToggle()">
+                        <i class="fa fa-volume-up"></i>
+                    </button>
+                    <div class="volume-control-container">
+                        <div class="progress volume-bar" @click="resizeVolume($event)">
+                            <div class="progress-bar" :style="formatVolume"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-button">
+                    <button class="btn btn-primary btn-sm" @click="switchModel()">
+                        <i v-if="play_model === 0" class="fa fa-sort-amount-asc"></i>
+                        <i v-else-if="play_model === 1" class="fa fa-rotate-right"></i>
+                        <i v-else class="fa fa-random"></i>
+                    </button>
+                </div>
+                <div class="control-button">
+                    <button class="btn btn-primary btn-sm" @click="$('.music-list').slideToggle()"><i class="fa fa-th-list"></i></button>
+                </div>
+            </div>
+            <div class="music-list" v-if="music_list.length > 0">
+                <div v-for="(music, index) in music_list"
+                    :index="index"
+                    :key="music.sha"
+                    @click="getMusicContent($event, music.download_url)">{{ index + 1 }}. {{ music.name }}</div>
+            </div>
+            <div v-else>{{ music_msg }}</div>
+        </div>
+    `,
 }

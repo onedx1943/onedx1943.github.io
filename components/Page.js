@@ -5,6 +5,13 @@ Vue.component('page-header', {
             github_url: 'https://github.com/onedx1943/onedx1943.github.io',
         }
     },
+
+    methods: {
+        switchSidebar: function () {
+            $(".page-sidebar").toggleClass("open");
+        },
+    },
+
     template: `
         <div class="page-header">
             <div class="menu-button"><i class="fa fa-navicon" @click="switchSidebar()"></i></div>
@@ -14,15 +21,16 @@ Vue.component('page-header', {
             </div>
         </div>
     `,
-    methods: {
-        switchSidebar: function () {
-            $(".page-sidebar").toggleClass("open");
-        },
-    }
 
 });
 // page-sidebar 插槽
 Vue.component('page-sidebar', {
+    mounted: function () {
+        $(".page-sidebar").on("click","a",function () {
+            $(".page-sidebar").toggleClass("open", false);
+        })
+    },
+
     template: `
         <div class="page-sidebar">
             <div class="page-sidebar-inner">
@@ -30,29 +38,19 @@ Vue.component('page-sidebar', {
             </div>
         </div>
     `,
-    mounted: function () {
-        $(".page-sidebar").on("click","a",function () {
-            $(".page-sidebar").toggleClass("open", false);
-        })
-    },
 });
 Vue.component('scroll-top', {
-    template: `
-        <div class="scroll-top-button" @click="$('.app-container').animate({scrollTop: 0})">
-            <span>
-                <i class="fa fa-arrow-up"></i>
-            </span>
-        </div>
-    `,
     created: function () {
         this.debouncedScroll = _.debounce(this.showScrollButton, 300);
     },
+
     mounted: function () {
         let _this = this;
         $('.app-container').scroll(function(){
             _this.debouncedScroll();
         })
     },
+
     methods: {
         showScrollButton: function () {
             if($('.app-container').scrollTop() > 2000){
@@ -61,5 +59,13 @@ Vue.component('scroll-top', {
                 $('.scroll-top-button').hide();
             }
         }
-    }
+    },
+
+    template: `
+        <div class="scroll-top-button" @click="$('.app-container').animate({scrollTop: 0})">
+            <span>
+                <i class="fa fa-arrow-up"></i>
+            </span>
+        </div>
+    `,
 });

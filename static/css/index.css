@@ -93,7 +93,7 @@ div#app {
     height: calc(100% - 0px);
     transition: padding-top 0.4s cubic-bezier(0.4, 0, 0, 1);
 }
-@media screen and (max-height: 400px) {
+@media screen and (max-height: 600px) {
     .page-header {
         top: -55px;
     }
@@ -444,6 +444,7 @@ div#app {
 }
 .music-list {
     height: 450px;
+    overflow-y: auto;
     overflow-y: overlay;
     margin: 10px 0;
 }
@@ -460,4 +461,25 @@ div#app {
 }
 .music-list .active-music {
     color: #2ea44f;
+}
+@media screen and (min-height: 601px) {
+    .music-list {
+        height: calc(100vh - 610px);
+    }
+}
+@media screen and (max-height: 600px) {
+    .music-header-collapse {
+        display: none;
+    }
+    .music-header {
+        display: none;
+    }
+    .music-list {
+        height: calc(100vh - 210px);
+    }
+}
+@media screen and (max-height: 240px) {
+    .music-list {
+        display: none!important;
+    }
 }

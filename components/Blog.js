@@ -4,6 +4,19 @@ export default {
             msg: '瞅啥呢，这里啥也没有啊 ʅ（´◔౪◔）ʃ',
         }
     },
+
+    created: function () {
+
+    },
+
+    mounted: function () {
+
+    },
+
+    methods: {
+
+    },
+
     template: `
         <div class="page-container">
             <page-header></page-header>
@@ -13,13 +26,4 @@ export default {
             </div>
         </div>
     `,
-    created: function () {
-
-    },
-    mounted: function () {
-
-    },
-    methods: {
-
-    }
 }
