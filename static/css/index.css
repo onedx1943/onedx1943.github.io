@@ -441,6 +441,7 @@ div#app {
 }
 .volume-bar {
     cursor: pointer;
+    height: 18px;
 }
 .music-list {
     height: 450px;

@@ -299,11 +299,13 @@ export default {
             }
             this.status = 0;
             // 清空画布
-            let canvas = document.getElementById('music_canvas'),
-                c_width = canvas.width,
-                c_height = canvas.height - 2;
-            let ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, c_width, c_height);
+            let canvas = document.getElementById('music_canvas');
+            if (canvas) {
+                let c_width = canvas.width,
+                    c_height = canvas.height - 2;
+                let ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, c_width, c_height);
+            }
         },
 
         switchModel: function () {
