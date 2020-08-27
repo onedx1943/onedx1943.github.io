@@ -37,6 +37,12 @@ export default {
                 document.execCommand('copy');
             }
             document.body.removeChild(input);
+            this.$notify({
+                type: 'success',
+                title: '提示',
+                message: 'Icon已复制: ' + name,
+                offset: 60
+            })
         }
     },
 

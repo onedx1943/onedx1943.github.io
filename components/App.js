@@ -36,8 +36,8 @@ export default {
                         <router-view></router-view>
                     </div>
                 </div>
+                <el-backtop target=".app-container" :visibility-height="1000"></el-backtop>
             </div>
-            <scroll-top></scroll-top>
         </div>
     `,
 

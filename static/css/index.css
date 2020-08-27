@@ -126,6 +126,11 @@ div#app {
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
     transition: all 0.4s cubic-bezier(0.4, 0, 0, 1);
 }
+@media screen and (max-height: 600px) {
+    .page-sidebar {
+        top: 0;
+    }
+}
 .page-sidebar-inner {
     width: 260px;
     padding: 35px 20px 60px;
@@ -234,7 +239,6 @@ div#app {
 .novel-custom {
     display: flex;
     justify-content: space-between;
-    background-color: #f8f8f8;
     padding: 10px 20px;
     border-bottom: 1px dotted black;
 }
@@ -260,7 +264,7 @@ div#app {
     font-family: 'Microsoft YaHei', Arial, sans-serif;;
 }
 .novel-list {
-    height: 200px;
+    height: 228px;
     overflow-y: overlay;
     margin: 10px;
     padding-right: 21px;
@@ -287,9 +291,22 @@ div#app {
     width: 300px;
     overflow: hidden;
     margin: 3px;
+    display: flex;
+    height: 32px;
+    align-items: center;
 }
 .novel-setting > div select, .novel-setting > div input {
-    width: 200px;
+    width: 221px;
+}
+.el-popper[x-placement^=bottom] {
+    margin-top: 6px!important;
+}
+.novel-setting .el-input-number__decrease,
+.novel-setting .el-input-number__increase {
+    display: none;
+}
+.novel-setting label {
+    margin-bottom: 0;
 }
 .novel-container {
     margin-top: 20px;
@@ -318,7 +335,6 @@ div#app {
 .music-custom {
     display: flex;
     justify-content: space-between;
-    background-color: #f8f8f8;
     padding: 10px 20px;
     border-bottom: 1px dotted black;
 }
@@ -417,7 +433,7 @@ div#app {
 }
 @media screen and (min-height: 601px) {
     .music-list {
-        height: calc(100vh - 610px);
+        height: calc(100vh - 660px);
     }
 }
 @media screen and (max-height: 600px) {
@@ -428,7 +444,7 @@ div#app {
         display: none;
     }
     .music-list {
-        height: calc(100vh - 210px);
+        height: calc(100vh - 285px);
     }
 }
 @media screen and (max-height: 240px) {

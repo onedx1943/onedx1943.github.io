@@ -39,33 +39,3 @@ Vue.component('page-sidebar', {
         </div>
     `,
 });
-Vue.component('scroll-top', {
-    created: function () {
-        this.debouncedScroll = _.debounce(this.showScrollButton, 300);
-    },
-
-    mounted: function () {
-        let _this = this;
-        $('.app-container').scroll(function(){
-            _this.debouncedScroll();
-        })
-    },
-
-    methods: {
-        showScrollButton: function () {
-            if($('.app-container').scrollTop() > 2000){
-                $('.scroll-top-button').show();
-            } else {
-                $('.scroll-top-button').hide();
-            }
-        }
-    },
-
-    template: `
-        <div class="scroll-top-button" @click="$('.app-container').animate({scrollTop: 0})">
-            <span>
-                <i class="fa fa-arrow-up"></i>
-            </span>
-        </div>
-    `,
-});

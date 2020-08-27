@@ -16,6 +16,7 @@ export default {
 
     data: function () {
         return {
+            activeNames: ['1'],
             music_api: 'https://api.github.com/repos/onedx1943/Music/contents',
             music_list: [],
             music_msg: '正在读取文件...',
@@ -68,6 +69,7 @@ export default {
             _this.music_msg = '别着急，正在查找音乐文件！';
             axios.get(file_api)
                 .then(function (response) {
+                    _this.limitNotification(response.headers);
                     for(let i = 0; i < response.data.length; i++){
                         if (response.data[i].name.endsWith('.mp3') || response.data[i].name.endsWith('.flac')) {
                             _this.music_list.push(response.data[i])
@@ -97,6 +99,7 @@ export default {
                 url: music_url,
                 responseType: 'arraybuffer'
             }).then(function (response) {
+                _this.limitNotification(response.headers);
                 if (_this.audioContext == null) {
                     try {
                         _this.audioContext = new AudioContext();
@@ -125,6 +128,19 @@ export default {
                 console.log(error);
                 _this.tips_msg = '完了~取文件失败了';
             });
+        },
+
+        limitNotification: function (headers) {
+            let limit = headers['x-ratelimit-limit'];
+            let remaining = headers['x-ratelimit-remaining'];
+            if (parseInt(remaining) / parseInt(limit) > 0.6) {
+                this.$notify({
+                    type: 'warning',
+                    title: '警告',
+                    message: '请求速率限制: ' + remaining + '/' + limit + '每小时',
+                    offset: 60
+                })
+            }
         },
 
         _visualize: function(audioContext, buffer) {
@@ -349,24 +365,31 @@ export default {
 
     template: `
         <div>
-            <div class="music-header-collapse" data-toggle="collapse" data-target=".music-header"><i class="fa fa-tasks"></i></div>
-            <div class="collapse show music-header">
-                <div class="music-custom">
-                    <span>从自定义github仓获取音乐：</span>
-                    <input v-model="custom_api">
-                    <button class="btn btn-primary btn-sm" @click="loadCustomApi()"><i class="fa fa-flash"></i></button>
-                </div>
-                <div><canvas id="music_canvas" width="1080" height="250"></canvas></div>
-            </div>
+            <el-collapse v-model="activeNames">
+                <el-collapse-item name="1">
+                    <template slot="title">
+                        <i class="fa fa-tasks"></i>
+                    </template>
+                    <div class="music-header">
+                        <div class="music-custom">
+                            <el-input placeholder="请输入内容" v-model="custom_api">
+                                <template slot="prepend">从自定义github仓获取音乐</template>
+                                <el-button slot="append" icon="el-icon-search" @click="loadCustomApi"></el-button>
+                            </el-input>
+                        </div>
+                        <div><canvas id="music_canvas" width="1080" height="250"></canvas></div>
+                    </div>
+                </el-collapse-item>
+            </el-collapse>
             <div class="tips-msg">{{ tips_msg }}</div>
             <div class="music-control">
                 <div class="btn-group btn-group-sm">
-                    <button class="btn btn-primary" @click="playMusic()">
+                    <button class="btn btn-primary" @click="playMusic">
                         <i class="fa" :class="{'fa-pause': status == 1, 'fa-play': status != 1}"></i>
                     </button>
                     <button class="btn btn-primary" @click="stopMusic(true)"><i class="fa fa-stop"></i></button>
-                    <button class="btn btn-primary" @click="preMusic()"><i class="fa fa-backward"></i></button>
-                    <button class="btn btn-primary" @click="nextMusic()"><i class="fa fa-forward"></i></button>
+                    <button class="btn btn-primary" @click="preMusic"><i class="fa fa-backward"></i></button>
+                    <button class="btn btn-primary" @click="nextMusic"><i class="fa fa-forward"></i></button>
                 </div>
                 <div class="music-progress-container">
                     <span>{{ current_time | formatSeconds }}</span>
@@ -376,13 +399,13 @@ export default {
                     <span>{{ duration_time | formatSeconds }}</span>
                 </div>
                 <div class="btn-group btn-group-sm">
-                    <button class="btn btn-primary volume-control-button" @click="mutedPage()">
+                    <button class="btn btn-primary volume-control-button" @click="mutedPage">
                         <i class="fa" :class="muted ? 'fa-volume-off' : 'fa-volume-up'"></i>
                     </button>
                     <div class="volume-bar">
                         <el-slider v-model="volume" :show-tooltip="false" @input="resizeVolume"></el-slider>
                     </div>
-                    <button class="btn btn-primary control-button" @click="switchModel()">
+                    <button class="btn btn-primary control-button" @click="switchModel">
                         <i v-if="play_model === 0" class="fa fa-sort-numeric-asc"></i>
                         <i v-else-if="play_model === 1" class="fa fa-rotate-right"></i>
                         <i v-else class="fa fa-random"></i>
@@ -396,7 +419,7 @@ export default {
                 <div v-for="(music, index) in music_list"
                     :index="index"
                     :key="music.sha"
-                    @click="getMusicContent($event, music.download_url)">{{ index + 1 }}. {{ music.name }}</div>
+                    @click="getMusicContent($event, music.download_url)">{{ index + 1 }}. {{ music.name }}  ( {{ (music.size / 1024 / 1024).toFixed(2) + 'M' }} )</div>
             </div>
             <div v-else>{{ music_msg }}</div>
         </div>
