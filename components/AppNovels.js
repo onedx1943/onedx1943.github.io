@@ -17,7 +17,6 @@ export default {
             novel_chapter: [],
             novel_content: [],
             novel_page: 0,
-            input_page: 0,
             setting: {
                 font_size: '18.7px',
                 font_family: 'Microsoft YaHei',
@@ -39,7 +38,6 @@ export default {
             let _this = this;
             _this.novel_msg = '别着急，正在查找txt文件！';
             _this.novel_page = 0;
-            _this.input_page = 0;
             axios.get(file_api)
                 .then(function (response) {
                     for(let i = 0; i < response.data.length; i++){
@@ -65,7 +63,6 @@ export default {
             _this.novel_chapter = [''];
             _this.novel_content = ['正在读取...'];
             _this.novel_page = 1;
-            _this.input_page = 1;
             axios.get(novel_url)
                 .then(function (response) {
                     if (response.data == '') {
@@ -86,7 +83,6 @@ export default {
                     _this.novel_chapter = chapter;
                     _this.novel_content = response.data.split(reg);
                     _this.novel_page = 1;
-                    _this.input_page = 1;
                     _this.getChapterFromSession();
                 })
                 .catch(function (error) {
@@ -95,69 +91,26 @@ export default {
                 });
         },
 
-        deletePageNum: function () {
-            if (this.novel_page > 1) {
-                this.novel_page -= 1;
-            }
-            this.input_page = this.novel_page;
-            this.saveToSession();
-        },
-
-        addPageNum: function () {
-            if (this.novel_page < this.novel_chapter.length) {
-                this.novel_page += 1;
-            }
-            this.input_page = this.novel_page;
-            this.saveToSession();
-        },
-
-        inputChange: function() {
-            if (this.input_page == '') {
-                this.input_page = 1;
-            }
-            if (this.input_page < 1) {
-                this.input_page = 1;
-            }
-            if (this.input_page > this.novel_chapter.length) {
-                this.input_page = this.novel_chapter.length;
-            }
-            this.novel_page = this.input_page;
-            this.saveToSession();
-        },
-
-        jumpChapter: function (index) {
-            if (index === 0) {
-                return
-            }
-            this.input_page = index;
-            this.novel_page = index;
-            $('.chapter-list').toggleClass('open', false);
+        handleCurrentChange(val) {
             this.saveToSession();
         },
 
         getChapterFromSession: function () {
-            if (this.novel_name == '') {
+            if (this.novel_name === '') {
                 return
             }
             let num = sessionStorage.getItem(this.novel_name);
             if(num) {
-                this.input_page = num;
                 this.novel_page = num;
             }
         },
 
         saveToSession: function () {
-            if (this.novel_name == '') {
+            if (this.novel_name === '') {
                 return
             }
             $('.novel_content pre').animate({scrollTop: 0});
             sessionStorage.setItem(this.novel_name, this.novel_page);
-        },
-
-        showChapterMenu: function () {
-            let Chapter_menu = $('.chapter-list');
-            Chapter_menu.css('width', $('.novel_content').width());
-            Chapter_menu.toggleClass('open');
         },
 
         loadCustomApi: function () {
@@ -168,14 +121,12 @@ export default {
             this.novel_chapter = [];
             this.novel_content = [];
             this.novel_page = 0;
-            this.input_page = 0;
             this.novel_list = [];
             if (reg.test(this.custom_api)) {
                 this.getNovelList(this.custom_api);
             } else {
                 this.novel_msg = '别瞎填链接~';
                 this.novel_page = 1;
-                this.input_page = 1;
                 this.novel_chapter = [''];
                 this.novel_content = ['链接格式：https://api.github.com/repos/用户名/仓库名/contents（仓库内具体路径可以接着加 /xxx/xxx）'];
             }
@@ -280,23 +231,18 @@ export default {
             </div>
             <div class="novel-container">
                 <div v-if="novel_page > 0 && novel_page <= novel_chapter.length">
-                    <div class="btn-group btn-group-sm">
-                        <button class="btn btn-primary" @click="deletePageNum()"><i class="fa fa-chevron-left"></i></button>
-                        <input v-model.number="input_page" type="number" @input="inputChange()">
-                        <button class="btn btn-primary" @click="addPageNum()"><i class="fa fa-chevron-right"></i></button>
-                    </div>
-                    <div class="chapter-menu">
-                        <span>总页数：{{ novel_chapter.length }}</span>
-                        <button class="btn btn-primary btn-sm" @click="showChapterMenu()"><i class="fa fa-th"></i></button>
-                        <div class="chapter-list" v-if="novel_chapter.length > 0">
-                            <div class="chapter-list-content" v-for="(name, index) in novel_chapter" :key="index" @click="jumpChapter(index)">
-                                <span>{{ index | chapter }}</span>
-                            </div>
-                        </div>
-                    </div>
+                    <el-pagination 
+                        background
+                        @current-change="handleCurrentChange"
+                        :current-page.sync="novel_page"
+                        :page-size="1"
+                        layout="prev, pager, next, jumper, ->, total"
+                        :total="novel_chapter.length"
+                        :hide-on-single-page="true">
+                    </el-pagination>
                 </div>
                 <div v-else-if="novel_chapter.length > 0">
-                    <button @click="novel_page=1,input_page=1"><i class="fa fa-rotate-right"></i></button>
+                    <button @click="novel_page=1"><i class="fa fa-rotate-right"></i></button>
                 </div>
                 <div class="novel_chapter">{{ novel_chapter[novel_page - 1] }}</div>
                 <div class="novel_content">

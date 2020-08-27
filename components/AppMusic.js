@@ -34,16 +34,15 @@ export default {
             start_time: 0,
             duration_time: 0,
             current_time: 0,
-            volume: 0.5,
+            volume: 50,
+            volume_actual: 50,
             muted: false,
             gainNode: null,
         }
     },
 
     computed: {
-        formatVolume: function () {
-            return {width: (!this.muted) * this.volume * 100 + '%'}
-        },
+
     },
 
     mounted: function () {
@@ -151,7 +150,7 @@ export default {
             //将上一步解码得到的buffer数据赋值给source
             audioBufferSourceNode.buffer = buffer;
             //设置音量
-            gainNode.gain.linearRampToValueAtTime(_this.volume, audioContext.currentTime + 1);
+            gainNode.gain.linearRampToValueAtTime(_this.volume / 100, audioContext.currentTime + 1);
             _this.gainNode = gainNode;
             //播放
             if (!audioBufferSourceNode.start) {
@@ -328,16 +327,22 @@ export default {
 
         mutedPage: function () {
             this.muted = !this.muted;
+            if (this.muted) {
+                this.volume_actual = this.volume;
+                this.volume = 0;
+            } else {
+                this.volume = this.volume_actual;
+            }
             if (this.gainNode && this.audioContext) {
-                this.gainNode.gain.linearRampToValueAtTime(this.volume * (!this.muted), this.audioContext.currentTime + 1);
+                this.gainNode.gain.linearRampToValueAtTime(this.volume / 100 * (!this.muted), this.audioContext.currentTime + 1);
             }
         },
 
-        resizeVolume: function (event) {
-            this.muted = false;
-            this.volume = event.offsetX / $(event.currentTarget).width();
+        resizeVolume: function (value) {
+            this.volume = value;
+            this.muted = (this.volume === 0);
             if (this.gainNode && this.audioContext) {
-                this.gainNode.gain.linearRampToValueAtTime(this.volume * (!this.muted), this.audioContext.currentTime + 1);
+                this.gainNode.gain.linearRampToValueAtTime(this.volume / 100 * (!this.muted), this.audioContext.currentTime + 1);
             }
         },
     },
@@ -374,10 +379,8 @@ export default {
                     <button class="btn btn-primary volume-control-button" @click="mutedPage()">
                         <i class="fa" :class="muted ? 'fa-volume-off' : 'fa-volume-up'"></i>
                     </button>
-                    <div class="volume-control-container">
-                        <div class="progress volume-bar" @click="resizeVolume($event)">
-                            <div class="progress-bar" :style="formatVolume"></div>
-                        </div>
+                    <div class="volume-bar">
+                        <el-slider v-model="volume" :show-tooltip="false" @input="resizeVolume"></el-slider>
                     </div>
                     <button class="btn btn-primary control-button" @click="switchModel()">
                         <i v-if="play_model === 0" class="fa fa-sort-numeric-asc"></i>

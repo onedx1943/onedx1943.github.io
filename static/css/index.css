@@ -294,66 +294,11 @@ div#app {
 .novel-container {
     margin-top: 20px;
 }
-.novel-container input[type="number"]{
-    width: 100px;
-}
-.novel-container .btn-primary:not(:disabled):not(.disabled):active:focus {
-    box-shadow: none;
-}
-.novel-container .btn:focus {
-    box-shadow: none;
-}
-.chapter-menu {
-    float: right;
-    position: relative;
-    display: flex;
-}
-.chapter-menu > span {
-    display: inline-block;
-    height: 38px;
-    line-height: 38px;
-    margin: 0 15px;
-}
-.chapter-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 100px);
-    gap: 20px;
-    justify-content: center;
-    place-items: center;
-    width: 1100px;
-    margin: auto;
-    color: #717171;
-    position: absolute;
-    top: 40px;
-    right: 1px;
-    background-color: #f5edd4;
-    max-height: 319px;
-    overflow: overlay;
-    padding: 20px;
-    border: 1px solid;
-    visibility: hidden;
-}
-.chapter-list.open {
-    visibility: visible;
-}
-.chapter-list-content {
-    width: 100px;
-    height: 38px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    cursor: pointer;
-    white-space: nowrap;
-    overflow: hidden;
-}
-.chapter-list-content:hover {
-    color: cornflowerblue;
-}
 .novel_chapter {
     padding: 10px;
     font-size: 24px;
     font-weight: 600;
+    height: 56px;
 }
 .novel_content > pre {
     overflow-y: overlay;
@@ -434,14 +379,9 @@ div#app {
     border: 0;
     text-align: left;
 }
-.volume-control-container {
-    height: 38px;
-    width: 134px;
-    padding: 10px;
-}
 .volume-bar {
-    cursor: pointer;
-    height: 18px;
+    width: 100px;
+    margin: 0 10px;
 }
 .music-list {
     height: 450px;
