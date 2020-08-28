@@ -101,11 +101,7 @@ export default {
                 method: 'get',
                 url: music_url,
                 responseType: 'arraybuffer',
-                headers: {
-                    'Authorization': this.GLOBAL.token
-                }
             }).then(function (response) {
-                _this.limitNotification(response.headers);
                 if (_this.audioContext == null) {
                     try {
                         _this.audioContext = new AudioContext();

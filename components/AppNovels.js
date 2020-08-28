@@ -153,12 +153,7 @@ export default {
                 _this.novel_chapter = [''];
                 _this.novel_content = ['正在读取...'];
                 _this.novel_page = 1;
-                axios.get(data.url, {
-                    headers: {
-                        'Authorization': this.GLOBAL.token,
-                    }
-                }).then(function (response) {
-                    _this.limitNotification(response.headers);
+                axios.get(data.url).then(function (response) {
                     if (response.data === '') {
                         _this.novel_content = ['该文件内容为空，还是看看别的吧'];
                         return
