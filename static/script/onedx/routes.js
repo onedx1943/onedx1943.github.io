@@ -1,3 +1,7 @@
+//引入全局变量
+import globalVariable from './global_variable.js'
+Vue.prototype.GLOBAL = globalVariable;
+
 // 1. 定义 (路由) 组件。引入组件。
 import Home from '../../../components/Home.js';
 

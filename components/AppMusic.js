@@ -35,6 +35,7 @@ export default {
             start_time: 0,
             duration_time: 0,
             current_time: 0,
+            percentage: 0,
             volume: 50,
             volume_actual: 50,
             muted: false,
@@ -67,22 +68,24 @@ export default {
         getMusicList: function (file_api) {
             let _this = this;
             _this.music_msg = '别着急，正在查找音乐文件！';
-            axios.get(file_api)
-                .then(function (response) {
-                    _this.limitNotification(response.headers);
-                    for(let i = 0; i < response.data.length; i++){
-                        if (response.data[i].name.endsWith('.mp3') || response.data[i].name.endsWith('.flac')) {
-                            _this.music_list.push(response.data[i])
-                        } else if (response.data[i].type === 'dir') {
-                            let new_url = file_api + '/' + response.data[i].name;
-                            _this.getMusicList(new_url);
-                        }
+            axios.get(file_api, {
+                headers: {
+                    'Authorization': this.GLOBAL.token
+                }
+            }).then(function (response) {
+                _this.limitNotification(response.headers);
+                for(let i = 0; i < response.data.length; i++){
+                    if (response.data[i].name.endsWith('.mp3') || response.data[i].name.endsWith('.flac')) {
+                        _this.music_list.push(response.data[i])
+                    } else if (response.data[i].type === 'dir') {
+                        let new_url = file_api + '/' + response.data[i].name;
+                        _this.getMusicList(new_url);
                     }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                    _this.music_msg = '网络或者链接有问题啊，读取失败了！';
-                });
+                }
+            }).catch(function (error) {
+                console.log(error);
+                _this.music_msg = '网络或者链接有问题啊，读取失败了！';
+            });
         },
 
         getMusicContent: function (event, music_url) {
@@ -97,7 +100,10 @@ export default {
             axios({
                 method: 'get',
                 url: music_url,
-                responseType: 'arraybuffer'
+                responseType: 'arraybuffer',
+                headers: {
+                    'Authorization': this.GLOBAL.token
+                }
             }).then(function (response) {
                 _this.limitNotification(response.headers);
                 if (_this.audioContext == null) {
@@ -133,7 +139,7 @@ export default {
         limitNotification: function (headers) {
             let limit = headers['x-ratelimit-limit'];
             let remaining = headers['x-ratelimit-remaining'];
-            if (parseInt(remaining) / parseInt(limit) > 0.6) {
+            if (parseInt(remaining) / parseInt(limit) < 0.4) {
                 this.$notify({
                     type: 'warning',
                     title: '警告',
@@ -154,8 +160,7 @@ export default {
             _this.start_time = Math.round(audioContext.currentTime);
             _this.timer = setInterval(function () {
                 _this.current_time = Math.round(audioContext.currentTime) - _this.start_time;
-                let percent = (_this.current_time / _this.duration_time * 100).toFixed(2) + '%';
-                $('.music-progress .progress-bar').css('width', percent);
+                _this.percentage = _this.current_time / _this.duration_time * 100;
             }, 1000);
             //将source与分析器以及音量进行关联
             audioBufferSourceNode.connect(gainNode);
@@ -301,7 +306,7 @@ export default {
             this.duration_time = 0;
             this.current_time = 0;
             this.tips_msg = '';
-            $('.music-progress .progress-bar').css('width', 0);
+            this.percentage = 0;
             if (this.animationId !== null) {
                 cancelAnimationFrame(this.animationId);
             }
@@ -383,36 +388,34 @@ export default {
             </el-collapse>
             <div class="tips-msg">{{ tips_msg }}</div>
             <div class="music-control">
-                <div class="btn-group btn-group-sm">
-                    <button class="btn btn-primary" @click="playMusic">
+                <el-button-group>
+                    <el-button type="primary" @click="playMusic">
                         <i class="fa" :class="{'fa-pause': status == 1, 'fa-play': status != 1}"></i>
-                    </button>
-                    <button class="btn btn-primary" @click="stopMusic(true)"><i class="fa fa-stop"></i></button>
-                    <button class="btn btn-primary" @click="preMusic"><i class="fa fa-backward"></i></button>
-                    <button class="btn btn-primary" @click="nextMusic"><i class="fa fa-forward"></i></button>
-                </div>
+                    </el-button>
+                    <el-button type="primary" @click="stopMusic(true)"><i class="fa fa-stop"></i></el-button>
+                    <el-button type="primary" @click="preMusic"><i class="fa fa-backward"></i></el-button>
+                    <el-button type="primary" @click="nextMusic"><i class="fa fa-forward"></i></el-button>
+                </el-button-group>
                 <div class="music-progress-container">
                     <span>{{ current_time | formatSeconds }}</span>
-                    <div class="progress music-progress">
-                        <div class="progress-bar"></div>
-                    </div>
+                    <el-progress :percentage="percentage" :show-text="false" class="music-progress"></el-progress>
                     <span>{{ duration_time | formatSeconds }}</span>
                 </div>
-                <div class="btn-group btn-group-sm">
-                    <button class="btn btn-primary volume-control-button" @click="mutedPage">
+                <div class="music-volume-container">
+                    <el-button plain class="volume-control-button control-button" @click="mutedPage">
                         <i class="fa" :class="muted ? 'fa-volume-off' : 'fa-volume-up'"></i>
-                    </button>
+                    </el-button>
                     <div class="volume-bar">
                         <el-slider v-model="volume" :show-tooltip="false" @input="resizeVolume"></el-slider>
                     </div>
-                    <button class="btn btn-primary control-button" @click="switchModel">
+                    <el-button plain class="control-button" @click="switchModel">
                         <i v-if="play_model === 0" class="fa fa-sort-numeric-asc"></i>
                         <i v-else-if="play_model === 1" class="fa fa-rotate-right"></i>
                         <i v-else class="fa fa-random"></i>
-                    </button>
-                    <button class="btn btn-primary control-button" @click="$('.music-list').slideToggle()">
+                    </el-button>
+                    <el-button plain class="control-button" @click="$('.music-list').slideToggle()">
                         <i class="fa fa-th-list"></i>
-                    </button>
+                    </el-button>
                 </div>
             </div>
             <div class="music-list" v-if="music_list.length > 0">

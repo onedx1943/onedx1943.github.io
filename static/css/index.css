@@ -90,7 +90,7 @@ div#app {
 }
 .page-app, .page-blog {
     padding-top: 50px;
-    height: calc(100% - 0px);
+    height: calc(100% - 80px);
     transition: padding-top 0.4s cubic-bezier(0.4, 0, 0, 1);
 }
 @media screen and (max-height: 600px) {
@@ -153,7 +153,7 @@ div#app {
 .app-item-content {
     position: relative;
     padding: 35px 0 35px 300px;
-    max-width: 1400px;
+    max-width: 1100px;
     margin: 0 auto;
     transition: padding-left 0.4s cubic-bezier(0.4, 0, 0, 1);
 }
@@ -241,6 +241,7 @@ div#app {
     justify-content: space-between;
     padding: 10px 20px;
     border-bottom: 1px dotted black;
+    margin-bottom: 10px;
 }
 .novel-custom span {
     display: inline-block;
@@ -252,34 +253,28 @@ div#app {
 .novel-custom input {
     flex-grow: 1;
 }
-.novel-header {
-    display: flex;
-    justify-content: space-between;
-    background-color: #f8f8f8;
+.novel-list{
+    padding: 0 20px;
 }
-.novel-header > div {
-    flex: 1 1 auto;
-    width: 100%;
-    font-size: 17px;
-    font-family: 'Microsoft YaHei', Arial, sans-serif;;
-}
-.novel-list {
+.novel-list-content{
     height: 228px;
     overflow-y: overlay;
     margin: 10px;
-    padding-right: 21px;
+    padding-right: 17px;
 }
-.novel-list > div {
-    cursor: pointer;
-    white-space: nowrap;
-    overflow-x: hidden;
+.novel-operate {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
-.novel-list > div:hover {
-    color: cornflowerblue;
+.novel-operate > div {
+    flex: 1 1 auto;
 }
-.novel-list .active-novel {
-    color: #2ea44f;
+.novel-operate > div:last-child {
+    display: flex;
+    justify-content: flex-end;
 }
+
 .novel-setting {
     display: flex;
     flex-flow: column nowrap;
@@ -359,12 +354,7 @@ div#app {
     white-space: nowrap;
     overflow: hidden;
 }
-.music-control .btn-primary:not(:disabled):not(.disabled):active:focus {
-    box-shadow: none;
-}
-.music-control .btn:focus {
-    box-shadow: none;
-}
+
 .music-control {
     display: flex;
     justify-content: space-around;
@@ -372,8 +362,13 @@ div#app {
     margin: 10px 0;
 }
 .music-control button {
-    width: 38px;
-    height: 38px;
+    width: 42px;
+    height: 42px;
+}
+.music-control .el-button-group button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .music-progress-container {
     flex-grow: 1;
@@ -385,19 +380,17 @@ div#app {
     flex-grow: 1;
     margin: 0 15px;
 }
+.music-volume-container {
+    display: flex;
+}
 .control-button {
     margin-left: 10px;
-}
-.music-control > .btn-group > .volume-control-button,
-.music-control > .btn-group > .control-button{
-    background-color: white!important;
-    color: #464646!important;
-    border: 0;
-    text-align: left;
+    border: none;
 }
 .volume-bar {
     width: 100px;
-    margin: 0 10px;
+    margin: 0 20px;
+    align-self: center;
 }
 .music-list {
     height: 450px;
