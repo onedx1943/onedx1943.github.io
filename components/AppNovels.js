@@ -183,6 +183,7 @@ export default {
                         message: '获取文件失败，请检查',
                         offset: 60
                     });
+                    _this.loading = false;
                 });
             }
         },

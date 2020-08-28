@@ -266,6 +266,7 @@ div#app {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 10px;
 }
 .novel-operate > div {
     flex: 1 1 auto;
@@ -303,14 +304,11 @@ div#app {
 .novel-setting label {
     margin-bottom: 0;
 }
-.novel-container {
-    margin-top: 20px;
-}
 .novel_chapter {
     padding: 10px;
     font-size: 24px;
     font-weight: 600;
-    height: 56px;
+    height: 36px;
 }
 .novel_content > pre {
     overflow-y: overlay;
