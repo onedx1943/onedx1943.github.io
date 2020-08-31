@@ -40,7 +40,14 @@ export default {
             volume_actual: 50,
             muted: false,
             gainNode: null,
+            filterText: '',
         }
+    },
+
+    watch: {
+        filterText: function (val) {
+            this.filter_music(val)
+        },
     },
 
     computed: {
@@ -362,6 +369,16 @@ export default {
                 this.gainNode.gain.linearRampToValueAtTime(this.volume / 100 * (!this.muted), this.audioContext.currentTime + 1);
             }
         },
+        
+        filter_music: function (val) {
+            $('.music-list div').each(function () {
+                if ($(this).text().indexOf(val) > -1) {
+                    $(this).show()
+                } else {
+                    $(this).hide()
+                }
+            })
+        }
     },
 
     template: `
@@ -414,6 +431,10 @@ export default {
                     </el-button>
                 </div>
             </div>
+            <el-input
+                placeholder="仅供搜索，别想太多"
+                v-model="filterText">
+            </el-input>
             <div class="music-list" v-if="music_list.length > 0">
                 <div v-for="(music, index) in music_list"
                     :index="index"

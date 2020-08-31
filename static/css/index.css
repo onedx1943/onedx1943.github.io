@@ -433,7 +433,7 @@ div#app {
 }
 @media screen and (min-height: 601px) {
     .music-list {
-        height: calc(100vh - 660px);
+        height: calc(100vh - 710px);
     }
 }
 @media screen and (max-height: 600px) {
@@ -444,7 +444,7 @@ div#app {
         display: none;
     }
     .music-list {
-        height: calc(100vh - 285px);
+        height: calc(100vh - 335px);
     }
 }
 @media screen and (max-height: 240px) {
