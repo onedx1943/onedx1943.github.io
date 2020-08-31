@@ -73,17 +73,25 @@ export default {
             this.$refs.tree.filter(val);
         },
         width: function (val) {
-            this.max_width = document.getElementsByClassName('novel_content')[0].offsetWidth - 40;
+            let novel_content = document.getElementsByClassName('novel_content')[0];
+            if (novel_content) {
+                this.max_width = novel_content.offsetWidth - 40;
+            }
         }
     },
 
     mounted: function () {
         const _this = this;
-        _this.max_width = document.getElementsByClassName('novel_content')[0].offsetWidth - 40;
+        let novel_content = document.getElementsByClassName('novel_content')[0];
+        if (novel_content) {
+            _this.max_width = novel_content.offsetWidth - 40;
+        }
         window.onresize = () => {
             return (() => {
-                let content_width = document.getElementsByClassName('novel_content')[0].offsetWidth;
-                _this.max_width = content_width - 40;
+                let novel_content = document.getElementsByClassName('novel_content')[0];
+                if (novel_content) {
+                    _this.max_width = novel_content.offsetWidth - 40;
+                }
             })()
         }
     },

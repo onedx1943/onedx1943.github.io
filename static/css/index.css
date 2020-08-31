@@ -409,6 +409,9 @@ div#app {
     background-color: aliceblue;
     box-shadow: 0 0 2px rgba(0,0,0,0.2);
     padding: 0 20px;
+    height: 32px;
+    line-height: 32px;
+    font-size: 18px;
 }
 .music-list > div:hover {
     color: cornflowerblue;
