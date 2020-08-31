@@ -54,6 +54,7 @@ export default {
             ],
             width: 1060,
             height: 600,
+            max_width: 1060,
             custom_api: 'https://api.github.com/repos/onedx1943/Files/contents',
             filterText: '',
             defaultProps: {
@@ -68,13 +69,23 @@ export default {
     },
 
     watch: {
-        filterText(val) {
+        filterText: function (val) {
             this.$refs.tree.filter(val);
+        },
+        width: function (val) {
+            this.max_width = document.getElementsByClassName('novel_content')[0].offsetWidth - 40;
         }
     },
 
     mounted: function () {
-
+        const _this = this;
+        _this.max_width = document.getElementsByClassName('novel_content')[0].offsetWidth - 40;
+        window.onresize = () => {
+            return (() => {
+                let content_width = document.getElementsByClassName('novel_content')[0].offsetWidth;
+                _this.max_width = content_width - 40;
+            })()
+        }
     },
 
     methods: {
@@ -150,12 +161,13 @@ export default {
                 // $(event.currentTarget).addClass('active-novel');
                 _this.loading = true;
                 _this.novel_name = data.name;
-                _this.novel_chapter = [''];
+                _this.novel_chapter = ['提示：'];
                 _this.novel_content = ['正在读取...'];
                 _this.novel_page = 1;
                 axios.get(data.url).then(function (response) {
                     if (response.data === '') {
                         _this.novel_content = ['该文件内容为空，还是看看别的吧'];
+                        _this.loading = false;
                         return
                     }
                     let reg = /.*[第]{1,2}[0-9零○一二两三四五六七八九十百千廿卅卌壹贰叁肆伍陆柒捌玖拾佰仟万１２３４５６７８９０]{1,5}[章节節堂讲回集部分品]{1,2}.*/g;
@@ -166,6 +178,7 @@ export default {
                         chapter = [_this.novel_name];
                         if (response.data.length > 1024 * 1024) {
                             _this.novel_content = ['没找到章节名，而且内容还挺大，是不是文件编码有问题'];
+                            _this.loading = false;
                             return
                         }
                     }
@@ -201,7 +214,7 @@ export default {
             }
         },
 
-        handleCurrentChange(val) {
+        handleCurrentChange: function (val) {
             this.saveToSession();
         },
 
@@ -209,9 +222,23 @@ export default {
             if (this.novel_name === '') {
                 return
             }
-            let num = sessionStorage.getItem(this.novel_name);
+            let num = localStorage.getItem(this.novel_name);
             if(num) {
                 this.novel_page = num;
+            }
+        },
+
+        pre_page: function () {
+            if (this.novel_page > 1) {
+                this.novel_page -= 1;
+                this.saveToSession();
+            }
+        },
+
+        next_page: function () {
+            if (this.novel_page < this.novel_chapter.length) {
+                this.novel_page += 1;
+                this.saveToSession();
             }
         },
 
@@ -220,7 +247,7 @@ export default {
                 return
             }
             $('.novel_content pre').animate({scrollTop: 0});
-            sessionStorage.setItem(this.novel_name, this.novel_page);
+            localStorage.setItem(this.novel_name, this.novel_page);
         },
 
         loadCustomApi: function () {
@@ -236,7 +263,7 @@ export default {
             } else {
                 this.novel_msg = '别瞎填链接~';
                 this.novel_page = 1;
-                this.novel_chapter = [''];
+                this.novel_chapter = ['下面是提示信息：'];
                 this.novel_content = ['链接格式：https://api.github.com/repos/用户名/仓库名/contents（仓库内具体路径可以接着加 /xxx/xxx）'];
             }
         }
@@ -302,7 +329,7 @@ export default {
                                     width="400"
                                     trigger="click">
                                     <div class="novel-setting">
-                                        <div>字体大小: 
+                                        <div>字体大小：&nbsp;&nbsp;
                                             <el-select v-model="font_size" placeholder="请选择"
                                                 size="small">
                                                 <el-option
@@ -313,7 +340,7 @@ export default {
                                                 </el-option>
                                             </el-select>
                                         </div>
-                                        <div>字体类型: 
+                                        <div>字体类型：&nbsp;&nbsp;
                                             <div>
                                                 <el-radio-group v-model="font_family" size="small">
                                                     <el-radio-button label="SimSun">宋体</el-radio-button>
@@ -323,7 +350,7 @@ export default {
                                                 </el-radio-group>
                                             </div>
                                         </div>
-                                        <div>背景颜色: 
+                                        <div>背景颜色：&nbsp;&nbsp;
                                             <el-color-picker
                                                 v-model="bg_color"
                                                 show-alpha
@@ -331,7 +358,7 @@ export default {
                                                 size="small">
                                             </el-color-picker>
                                         </div>
-                                        <div>文字颜色: 
+                                        <div>文字颜色：&nbsp;&nbsp;
                                             <el-color-picker
                                                 v-model="color"
                                                 show-alpha
@@ -339,7 +366,7 @@ export default {
                                                 size="small">
                                             </el-color-picker>
                                         </div>
-                                        <div>内容宽度: 
+                                        <div>内容宽度：&nbsp;&nbsp;
                                             <el-input-number 
                                                 v-model="width" 
                                                 controls="false"
@@ -348,7 +375,7 @@ export default {
                                                 :max="1060">      
                                             </el-input-number>
                                         </div>
-                                        <div>内容高度: 
+                                        <div>内容高度：&nbsp;&nbsp;
                                             <el-input-number 
                                                 v-model="height" 
                                                 controls="false"
@@ -367,7 +394,12 @@ export default {
                         </div>
                         <div class="novel_chapter">{{ novel_chapter[novel_page - 1] }}</div>
                         <div class="novel_content">
-                            <pre :style="{'font-size': font_size, 'font-family': font_family, 'background-color': bg_color, 'color': color, 'width': width + 'px', 'max-height': height + 'px'}">{{ novel_content[novel_page - 1] }}</pre>
+                            <pre :style="{'font-size': font_size, 'font-family': font_family, 'background-color': bg_color, 'color': color, 'width': width + 'px', 'max-height': height + 'px', 'max-width': max_width + 'px'}">{{ novel_content[novel_page - 1] }}</pre>
+                            <div v-if="novel_chapter.length > 1" class="turn_page">
+                                <el-button plain @click="pre_page">上一章</el-button>
+                                {{ novel_page }}
+                                <el-button plain @click="next_page">下一章</el-button>
+                            </div>
                         </div>
                     </div>
                 </el-collapse-item>
