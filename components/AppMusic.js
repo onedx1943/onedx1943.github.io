@@ -341,6 +341,7 @@ export default {
             // 停止正在播放的音乐，并重新加载列表
             this.stopMusic(true);
             this.music_list = [];
+            this.filterText = '';
             if (reg.test(this.custom_api)) {
                 this.getMusicList(this.custom_api);
             } else {
@@ -432,8 +433,10 @@ export default {
                 </div>
             </div>
             <el-input
+                prefix-icon="el-icon-search"
                 placeholder="仅供搜索，别想太多"
-                v-model="filterText">
+                v-model="filterText"
+                clearable>
             </el-input>
             <div class="music-list" v-if="music_list.length > 0">
                 <div v-for="(music, index) in music_list"
