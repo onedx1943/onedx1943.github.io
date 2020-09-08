@@ -30,6 +30,7 @@ export default {
                             <div><router-link to="/app/icon">Icon</router-link></div>
                             <div><router-link to="/app/novel">Novels</router-link></div>
                             <div><router-link to="/app/music">Music</router-link></div>
+                            <div><router-link to="/app/video">Video</router-link></div>
                         </div>
                     </page-sidebar>
                     <div class="app-item-content">

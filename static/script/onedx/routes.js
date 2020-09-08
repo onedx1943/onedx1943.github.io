@@ -10,6 +10,7 @@ import AppIndex from '../../../components/AppIndex.js';
 import AppIcon from '../../../components/AppIcon.js';
 import AppNovels from '../../../components/AppNovels.js';
 import AppMusic from '../../../components/AppMusic.js';
+import AppVideo from '../../../components/AppVideo.js';
 
 import Blog from '../../../components/Blog.js';
 
@@ -22,6 +23,7 @@ const routes = [
           { path: 'icon', component: AppIcon },
           { path: 'novel', component: AppNovels },
           { path: 'music', component: AppMusic },
+          { path: 'video', component: AppVideo },
       ]
     },
     { path: '/blog', component: Blog },

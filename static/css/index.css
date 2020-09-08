@@ -452,3 +452,7 @@ div#app {
         display: none!important;
     }
 }
+
+.video-content {
+    margin: 10px 0;
+}
