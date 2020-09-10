@@ -11,7 +11,7 @@ export default {
         let css_files = document.styleSheets;
         let icon_list = [];
         for (let css_file of css_files) {
-            if (css_file.href.includes('font-awesome.min.css')) {
+            if (css_file.href && css_file.href.includes('font-awesome.min.css')) {
                 let rules = css_file.cssRules;
                 for (let rule of rules) {
                     if (rule.selectorText && rule.selectorText.endsWith('::before')) {
