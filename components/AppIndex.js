@@ -7,6 +7,20 @@ export default {
     template: `
         <div>
             {{ msg }}
+            <div class="app-index">
+                <el-card shadow="hover">
+                    Icon
+                </el-card>
+                <el-card shadow="hover">
+                    Novels
+                </el-card>
+                <el-card shadow="hover">
+                    Music
+                </el-card>
+                <el-card shadow="hover">
+                    Video
+                </el-card>
+            </div>
         </div>
     `
 }

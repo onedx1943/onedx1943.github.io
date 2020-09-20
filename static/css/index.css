@@ -132,23 +132,12 @@ div#app {
     }
 }
 .page-sidebar-inner {
-    width: 260px;
-    padding: 35px 20px 60px;
+    width: 300px;
+    padding-top: 10px;
 }
-.page-sidebar-inner a {
-    display: block;
-    color: #304455;
-    padding: 5px 16px;
-    white-space: nowrap;
-    cursor: pointer;
-    text-decoration: none;
-}
-.page-sidebar-inner a.router-link-active {
-    color: red;
-}
-.page-sidebar-inner a:hover {
-    color: #2ea44f;
-    text-decoration: none;
+.app-container-menu {
+    background-color: #f9f9f9;
+    user-select: none;
 }
 .app-item-content {
     position: relative;
@@ -194,6 +183,15 @@ div#app {
     justify-content: center;
     align-items: center;
 }
+/*app index*/
+.app-index {
+    display: grid;
+    grid-template-columns: repeat(3, 33.33%);
+    gap: 20px;
+    place-content: center;
+    margin: 20px auto;
+}
+
 /*icons*/
 .icons-list {
     display: grid;
