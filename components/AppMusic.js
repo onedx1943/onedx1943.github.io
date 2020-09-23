@@ -41,6 +41,11 @@ export default {
             muted: false,
             gainNode: null,
             filterText: '',
+            imgUrl: 'data:image/jpeg;base64,',
+            jsMediaTags: null,
+            musicTitle: '',
+            musicAlbum: '',
+            musicArtist: '',
         }
     },
 
@@ -59,6 +64,7 @@ export default {
         window.AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext || window.msAudioContext;
         window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame;
         window.cancelAnimationFrame = window.cancelAnimationFrame || window.webkitCancelAnimationFrame || window.mozCancelAnimationFrame || window.msCancelAnimationFrame;
+        this.jsMediaTags = window.jsmediatags;
         this.getMusicList(this.music_api);
     },
 
@@ -97,6 +103,10 @@ export default {
 
         getMusicContent: function (event, music_url) {
             let _this = this;
+            _this.imgUrl = 'data:image/jpeg;base64,';
+            _this.musicTitle = '';
+            _this.musicAlbum = '';
+            _this.musicArtist = '';
             $('.music-list .active-music').removeClass('active-music');
             $(event.currentTarget).addClass('active-music');
             let index = parseInt($(event.currentTarget).attr('index'));
@@ -124,6 +134,29 @@ export default {
                 }
                 let audioContext = _this.audioContext;
                 _this.tips_msg = '正在解码...';
+                _this.jsMediaTags.read(new Blob([response.data]), {
+                    onSuccess: function(tag) {
+                        console.log(tag.tags);
+                        _this.musicTitle = tag.tags.title;
+                        _this.musicAlbum = '专辑：' + tag.tags.album;
+                        _this.musicArtist = '歌手：' + tag.tags.artist;
+                        let picture  = tag.tags.picture;
+                        if (picture) {
+                            let imageReader = new FileReader();
+                            imageReader.onload = function (e) {
+                                _this.imgUrl = e.target.result;
+                            };
+                            imageReader.readAsDataURL(new Blob([new Uint8Array(picture.data)], {type: picture.format}));
+                        } else {
+                            _this.imgUrl = 'data:image/jpeg;base64,';
+                        }
+                        console.log();
+                    },
+                    onError: function(error) {
+                        console.log(error);
+                        _this.imgUrl = 'data:image/jpeg;base64,';
+                    }
+                });
                 audioContext.decodeAudioData(response.data, function(buffer) {
                     //解码成功则调用此函数，参数buffer为解码后得到的结果
                     //调用_visualize进行下一步处理
@@ -329,6 +362,10 @@ export default {
                 let ctx = canvas.getContext('2d');
                 ctx.clearRect(0, 0, c_width, c_height);
             }
+            this.imgUrl = 'data:image/jpeg;base64,';
+            this.musicTitle = '';
+            this.musicAlbum = '';
+            this.musicArtist = '';
         },
 
         switchModel: function () {
@@ -397,6 +434,28 @@ export default {
                             </el-input>
                         </div>
                         <div><canvas id="music_canvas" width="1080" height="250"></canvas></div>
+                        <div class="media-tags-container">
+                            <div class="album-picture-container">
+                                <el-image 
+                                    class="album-picture"
+                                    fit="fill"
+                                    :src="imgUrl">
+                                    <div slot="placeholder" class="image-slot">
+                                        加载中<span class="dot">...</span>
+                                    </div>
+                                    <div slot="error" class="image-slot">
+                                        <div></div>
+                                    </div>
+                                </el-image>
+                            </div>
+                            <div class="music-info-container">
+                                <div class="music-info-title">{{ musicTitle }}</div>
+                                <div class="music-info-data">
+                                    <div>{{ musicAlbum }}</div>
+                                    <div>{{ musicArtist }}</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </el-collapse-item>
             </el-collapse>
