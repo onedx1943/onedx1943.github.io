@@ -352,6 +352,9 @@ div#app {
 .media-tags-container {
     display: flex;
     padding: 25px;
+    height: 388px;
+    justify-content: space-between;
+    align-items: center;
 }
 .album-picture-container {
     width: 300px;
@@ -367,9 +370,11 @@ div#app {
     height: 200px;
     border-radius: 170px;
     padding: 50px;
-    animation: album 42s linear infinite;
-    /* animation: album 42s linear paused; */
+    animation: album 36s linear paused;
     background: -webkit-linear-gradient(left,#000 20%, #000000bf, #000 80%);
+}
+.album-picture.play {
+    animation: album 36s linear infinite;
 }
 @keyframes album {
     0%{transform: rotate(0deg);}
@@ -394,7 +399,7 @@ div#app {
     background: white;
 }
 .music-info-container {
-    width: 500px;
+    width: 550px;
     padding: 0 50px;
 }
 .music-info-title {
@@ -404,6 +409,21 @@ div#app {
 .music-info-data {
     display: flex;
     justify-content: space-between;
+}
+.music-lyrics {
+    height: 279px;
+    overflow: overlay;
+    font-size: 18px;
+    margin: 15px 0;
+    position: relative;
+    padding-right: 17px;
+}
+.music-lyrics div {
+    min-height: 31px;
+    line-height: 31px;
+}
+.music-lyrics div.active{
+    color: cornflowerblue;
 }
 .tips-msg {
     height: 26px;

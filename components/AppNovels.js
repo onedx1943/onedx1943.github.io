@@ -70,7 +70,7 @@ export default {
 
     watch: {
         filterText: function (val) {
-            this.$refs.tree.filter(val);
+            this.$refs.tree.filter(val.toLowerCase());
         },
         width: function (val) {
             let novel_content = document.getElementsByClassName('novel_content')[0];
@@ -159,7 +159,7 @@ export default {
 
         filterNode: function (value, data) {
             if (!value) return true;
-            return data.label.indexOf(value) !== -1;
+            return data.label.toLowerCase().indexOf(value) !== -1;
         },
 
         handleNodeClick: function (data) {

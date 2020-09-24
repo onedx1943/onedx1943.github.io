@@ -46,12 +46,16 @@ export default {
             musicTitle: '',
             musicAlbum: '',
             musicArtist: '',
+            lyricsList: [],
+            lyricsApi: 'https://api.github.com/repos/onedx1943/Music/contents/lrc',
+            lyricsContent: [],
+            musicLyricsMsg: '',
         }
     },
 
     watch: {
         filterText: function (val) {
-            this.filter_music(val)
+            this.filter_music(val.toLowerCase())
         },
     },
 
@@ -65,6 +69,7 @@ export default {
         window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame;
         window.cancelAnimationFrame = window.cancelAnimationFrame || window.webkitCancelAnimationFrame || window.mozCancelAnimationFrame || window.msCancelAnimationFrame;
         this.jsMediaTags = window.jsmediatags;
+        this.getMusicLyrics(this.lyricsApi);
         this.getMusicList(this.music_api);
     },
 
@@ -107,6 +112,8 @@ export default {
             _this.musicTitle = '';
             _this.musicAlbum = '';
             _this.musicArtist = '';
+            _this.musicLyricsMsg = '';
+            _this.lyricsContent = [];
             $('.music-list .active-music').removeClass('active-music');
             $(event.currentTarget).addClass('active-music');
             let index = parseInt($(event.currentTarget).attr('index'));
@@ -134,29 +141,7 @@ export default {
                 }
                 let audioContext = _this.audioContext;
                 _this.tips_msg = '正在解码...';
-                _this.jsMediaTags.read(new Blob([response.data]), {
-                    onSuccess: function(tag) {
-                        console.log(tag.tags);
-                        _this.musicTitle = tag.tags.title;
-                        _this.musicAlbum = '专辑：' + tag.tags.album;
-                        _this.musicArtist = '歌手：' + tag.tags.artist;
-                        let picture  = tag.tags.picture;
-                        if (picture) {
-                            let imageReader = new FileReader();
-                            imageReader.onload = function (e) {
-                                _this.imgUrl = e.target.result;
-                            };
-                            imageReader.readAsDataURL(new Blob([new Uint8Array(picture.data)], {type: picture.format}));
-                        } else {
-                            _this.imgUrl = 'data:image/jpeg;base64,';
-                        }
-                        console.log();
-                    },
-                    onError: function(error) {
-                        console.log(error);
-                        _this.imgUrl = 'data:image/jpeg;base64,';
-                    }
-                });
+                _this.getMusicInfo(response.data);
                 audioContext.decodeAudioData(response.data, function(buffer) {
                     //解码成功则调用此函数，参数buffer为解码后得到的结果
                     //调用_visualize进行下一步处理
@@ -193,11 +178,13 @@ export default {
             _this.duration_time = Math.round(buffer.duration);
             _this.current_time = 0;
             clearInterval(_this.timer);
-            _this.start_time = Math.round(audioContext.currentTime);
+            _this.start_time = audioContext.currentTime;
             _this.timer = setInterval(function () {
-                _this.current_time = Math.round(audioContext.currentTime) - _this.start_time;
+                let time = audioContext.currentTime - _this.start_time;
+                _this.setActiveLyrics(time);
+                _this.current_time = Math.floor(time);
                 _this.percentage = _this.current_time / _this.duration_time * 100;
-            }, 1000);
+            }, 100);
             //将source与分析器以及音量进行关联
             audioBufferSourceNode.connect(gainNode);
             audioBufferSourceNode.connect(analyser);
@@ -216,6 +203,7 @@ export default {
             }
             _this.tips_msg = _this.play_name;
             audioBufferSourceNode.start(0);
+            $('.album-picture').addClass('play');
             _this.status = 1;
             _this.source = audioBufferSourceNode;
             audioBufferSourceNode.onended = function() {
@@ -316,10 +304,12 @@ export default {
                 $('div[index=' + this.play_num + ']').click();
             } else if (this.status === 1) {
                 this.audioContext.suspend();
-                this.status = 2
+                this.status = 2;
+                $('.album-picture').removeClass('play');
             } else if (this.status === 2) {
                 this.audioContext.resume();
-                this.status = 1
+                this.status = 1;
+                $('.album-picture').addClass('play');
             }
         },
 
@@ -366,6 +356,9 @@ export default {
             this.musicTitle = '';
             this.musicAlbum = '';
             this.musicArtist = '';
+            this.lyricsContent = [];
+            this.musicLyricsMsg = '';
+            $('.album-picture').removeClass('play');
         },
 
         switchModel: function () {
@@ -410,13 +403,116 @@ export default {
         
         filter_music: function (val) {
             $('.music-list div').each(function () {
-                if ($(this).text().indexOf(val) > -1) {
+                if ($(this).text().toLowerCase().indexOf(val) > -1) {
                     $(this).show()
                 } else {
                     $(this).hide()
                 }
             })
-        }
+        },
+
+        getMusicInfo: function (data) {
+            let _this = this;
+            _this.jsMediaTags.read(new Blob([data]), {
+                onSuccess: function(tag) {
+                    if (tag.tags.title) {
+                        _this.musicTitle = tag.tags.title;
+                        _this.getLyricsContent(tag.tags.title);
+                    }
+                    if (tag.tags.album) {
+                        _this.musicAlbum = '专辑：' + tag.tags.album;
+                    }
+                    if (tag.tags.artist) {
+                        _this.musicArtist = '歌手：' + tag.tags.artist;
+                    }
+                    let picture  = tag.tags.picture;
+                    if (picture) {
+                        let imageReader = new FileReader();
+                        imageReader.onload = function (e) {
+                            _this.imgUrl = e.target.result;
+                        };
+                        imageReader.readAsDataURL(new Blob([new Uint8Array(picture.data)], {type: picture.format}));
+                    } else {
+                        _this.imgUrl = 'data:image/jpeg;base64,';
+                    }
+                },
+                onError: function(error) {
+                    console.log(error);
+                    _this.imgUrl = 'data:image/jpeg;base64,';
+                }
+            });
+        },
+
+        getMusicLyrics: function (file_api) {
+            let _this = this;
+            axios.get(file_api, {
+                headers: {
+                    'Authorization': this.GLOBAL.token
+                }
+            }).then(function (response) {
+                _this.limitNotification(response.headers);
+                for(let i = 0; i < response.data.length; i++){
+                    if (response.data[i].name.endsWith('.lrc')) {
+                        _this.lyricsList.push(response.data[i])
+                    } else if (response.data[i].type === 'dir') {
+                        let new_url = file_api + '/' + response.data[i].name;
+                        _this.getMusicLyrics(new_url);
+                    }
+                }
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
+
+        getLyricsContent: function (name) {
+            let _this = this;
+            let url = null;
+            for (let lyrics of _this.lyricsList) {
+                if (lyrics.name.includes(name)) {
+                    url = lyrics.download_url;
+                    break
+                }
+            }
+            if (url) {
+                axios.get(url).then(function (response) {
+                    let items = response.data.split(/[\r\n]/);
+                    for (let item of items) {
+                        let time = item.substring(item.indexOf("[") + 1, item.indexOf("]"));
+                        if ((/\d+:\d+.\d+/).test(time)) {
+                            _this.lyricsContent.push({
+                                time: (time.split(":")[0] * 60 + parseFloat(time.split(":")[1])).toFixed(3),
+                                content: item.substring(item.indexOf("]") + 1, item.length)
+                            })
+                        }
+                    }
+                    _this.lyricsContent.unshift({time: 0, content: ''});
+                    if (_this.lyricsContent.length === 1) {
+                        _this.musicLyricsMsg = '暂无歌词';
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            } else {
+                _this.musicLyricsMsg = '暂无歌词';
+            }
+        },
+        setActiveLyrics: function (time) {
+            let _this = this;
+            for (let num = 0, len = _this.lyricsContent.length; num < len; num++) {
+                if (num === len - 1 || (_this.lyricsContent[num].time <= time && time < _this.lyricsContent[num + 1].time)) {
+                    let activeLyricsDom = $('.music-lyrics div[time="' + _this.lyricsContent[num].time + '"]');
+                    if (!activeLyricsDom.hasClass('active')) {
+                        let musicLyricsDom = $('.music-lyrics');
+                        let position = activeLyricsDom.position().top;
+                        let scrollTop = musicLyricsDom.scrollTop() - (124 - position);
+                        musicLyricsDom.animate({scrollTop: scrollTop}, 300);
+                        $('.music-lyrics div').removeClass('active');
+                        activeLyricsDom.addClass('active');
+                    }
+                    break
+                }
+            }
+        },
     },
 
     template: `
@@ -454,6 +550,14 @@ export default {
                                     <div>{{ musicAlbum }}</div>
                                     <div>{{ musicArtist }}</div>
                                 </div>
+                                <div class="music-lyrics" v-if="lyricsContent.length > 0">
+                                    <div v-for="(lyrics, index) in lyricsContent"
+                                        :time="lyrics.time"
+                                        :key="index">
+                                        {{ lyrics.content }}
+                                    </div>
+                                </div>
+                                <div class="music-lyrics" v-else>{{ musicLyricsMsg }}</div>
                             </div>
                         </div>
                     </div>

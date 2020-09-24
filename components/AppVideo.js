@@ -17,7 +17,7 @@ export default {
 
     watch: {
         filterText: function (val) {
-            this.filter_video(val)
+            this.filter_video(val.toLowerCase())
         },
     },
 
@@ -163,7 +163,7 @@ export default {
         
         filter_video: function (val) {
             $('.music-list div').each(function () {
-                if ($(this).text().indexOf(val) > -1) {
+                if ($(this).text().toLowerCase().indexOf(val) > -1) {
                     $(this).show()
                 } else {
                     $(this).hide()
