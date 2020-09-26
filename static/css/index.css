@@ -517,3 +517,9 @@ div#app {
 .video-content {
     margin: 10px 0;
 }
+
+#particles{
+    position: absolute;
+    height: calc(100% - 50px);
+    width: 100%;
+}

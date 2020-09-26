@@ -13,7 +13,11 @@ export default {
     mounted: function () {
         $(".app-item-content").on("click", function () {
             $(".page-sidebar").toggleClass("open", false);
-        })
+        });
+
+        particlesJS.load('particles', 'static/file/particles.json', function () {
+            console.log('callback - particles.js config loaded');
+        });
     },
 
     methods: {
@@ -26,6 +30,7 @@ export default {
         <div class="page-container">
             <page-header></page-header>
             <div class="page-app">
+                <div id="particles"></div>
                 <div class="app-container">
                     <page-sidebar>
                         <el-menu :default-active="activeMenu" class="app-container-menu" @select="menuItemSelect" router="true">
