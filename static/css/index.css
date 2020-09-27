@@ -527,3 +527,17 @@ div#app {
     height: calc(100% - 50px);
     width: 100%;
 }
+
+/*其他*/
+.el-collapse-item__wrap {
+    background-color: #fff0;
+}
+.el-tree {
+    background-color: #fff0;
+}
+.el-tree-node__content:hover {
+    background-color: #e9ecf187;
+}
+.el-tree-node:focus>.el-tree-node__content {
+    background-color: #e9ecf187;
+}

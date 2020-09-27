@@ -12,6 +12,7 @@ export default {
             video_msg: '正在读取文件...',
             filterText: '',
             videoPlayer: null,
+            jsMediaTags: null,
         }
     },
 
@@ -26,6 +27,7 @@ export default {
     },
 
     mounted: function () {
+        this.jsMediaTags = window.jsmediatags;
         this.getVideoList(this.video_api);
     },
 
@@ -63,6 +65,7 @@ export default {
             $('.music-list .active-music').removeClass('active-music');
             $(event.currentTarget).addClass('active-music');
             let index = parseInt($(event.currentTarget).attr('index'));
+            _this.getVideoInfo(download_url);
             if (this.videoPlayer == null) {
                 _this.initVideo(download_url);
             } else {
@@ -140,6 +143,18 @@ export default {
                     console.log('视频可以播放了');
                 });
             }
+        },
+
+        getVideoInfo: function (download_url) {
+            let _this = this;
+            _this.jsMediaTags.read(download_url, {
+                onSuccess: function(tag) {
+                    console.log(tag);
+                },
+                onError: function(error) {
+                    console.log(error);
+                }
+            });
         },
 
         stopVideo: function () {
