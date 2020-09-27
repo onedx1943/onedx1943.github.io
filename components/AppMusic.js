@@ -522,45 +522,51 @@ export default {
                     <template slot="title">
                         <i class="fa fa-tasks"></i>
                     </template>
-                    <div class="music-header">
-                        <div class="music-custom">
-                            <el-input placeholder="请输入内容" v-model="custom_api">
-                                <template slot="prepend">从自定义github仓获取音乐</template>
-                                <el-button slot="append" icon="el-icon-search" @click="loadCustomApi"></el-button>
-                            </el-input>
-                        </div>
-                        <div><canvas id="music_canvas" width="1080" height="250"></canvas></div>
-                        <div class="media-tags-container">
-                            <div class="album-picture-container">
-                                <el-image 
-                                    class="album-picture"
-                                    fit="fill"
-                                    :src="imgUrl">
-                                    <div slot="placeholder" class="image-slot">
-                                        加载中<span class="dot">...</span>
-                                    </div>
-                                    <div slot="error" class="image-slot">
-                                        <div></div>
-                                    </div>
-                                </el-image>
+                    <el-tabs value="third">
+                        <el-tab-pane label="Custom" name="first">
+                            <div class="music-custom">
+                                <el-input placeholder="请输入内容" v-model="custom_api">
+                                    <template slot="prepend">从自定义github仓获取音乐</template>
+                                    <el-button slot="append" icon="el-icon-search" @click="loadCustomApi"></el-button>
+                                </el-input>
                             </div>
-                            <div class="music-info-container">
-                                <div class="music-info-title">{{ musicTitle }}</div>
-                                <div class="music-info-data">
-                                    <div>{{ musicAlbum }}</div>
-                                    <div>{{ musicArtist }}</div>
+                        </el-tab-pane>
+                        <el-tab-pane label="Visualize" name="second">
+                            <div><canvas id="music_canvas" width="1080" height="250"></canvas></div>
+                        </el-tab-pane>
+                        <el-tab-pane label="Lyrics" name="third">
+                            <div class="media-tags-container">
+                                <div class="album-picture-container">
+                                    <el-image 
+                                        class="album-picture"
+                                        fit="fill"
+                                        :src="imgUrl">
+                                        <div slot="placeholder" class="image-slot">
+                                            加载中<span class="dot">...</span>
+                                        </div>
+                                        <div slot="error" class="image-slot">
+                                            <div></div>
+                                        </div>
+                                    </el-image>
                                 </div>
-                                <div class="music-lyrics" v-if="lyricsContent.length > 0">
-                                    <div v-for="(lyrics, index) in lyricsContent"
-                                        :time="lyrics.time"
-                                        :key="index">
-                                        {{ lyrics.content }}
+                                <div class="music-info-container">
+                                    <div class="music-info-title">{{ musicTitle }}</div>
+                                    <div class="music-info-data">
+                                        <div>{{ musicAlbum }}</div>
+                                        <div>{{ musicArtist }}</div>
                                     </div>
+                                    <div class="music-lyrics" v-if="lyricsContent.length > 0">
+                                        <div v-for="(lyrics, index) in lyricsContent"
+                                            :time="lyrics.time"
+                                            :key="index">
+                                            {{ lyrics.content }}
+                                        </div>
+                                    </div>
+                                    <div class="music-lyrics" v-else>{{ musicLyricsMsg }}</div>
                                 </div>
-                                <div class="music-lyrics" v-else>{{ musicLyricsMsg }}</div>
                             </div>
-                        </div>
-                    </div>
+                        </el-tab-pane>
+                    </el-tabs>
                 </el-collapse-item>
             </el-collapse>
             <div class="tips-msg">{{ tips_msg }}</div>
