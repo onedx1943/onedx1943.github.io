@@ -15,9 +15,7 @@ export default {
             $(".page-sidebar").toggleClass("open", false);
         });
 
-        particlesJS.load('particles', 'static/file/particles.json', function () {
-            console.log('callback - particles.js config loaded');
-        });
+        particlesJS.load('particles', 'static/file/particles.json');
     },
 
     methods: {

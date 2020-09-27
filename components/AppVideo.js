@@ -151,7 +151,7 @@ export default {
 
         loadCustomApi: function () {
             // 检测链接合法性
-            let reg = new RegExp("^https://api.github.com/repos/[0-9a-z_!~*'().&=+$%-]+/[0-9a-z_!~*'().&=+$%-]+/contents(/[0-9a-z_!~*'().&=+$%-]+)*$", 'i');
+            let reg = new RegExp(this.GLOBAL.apiReg, 'i');
             this.video_list = [];
             this.filterText = '';
             if (reg.test(this.custom_api)) {
