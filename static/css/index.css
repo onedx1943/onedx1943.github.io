@@ -16,7 +16,7 @@ div#app {
 }
 .home-content {
     height: 100%;
-    background: url(../image/bg010.jpg) no-repeat fixed top;
+    /*background: url(../image/bg010.jpg) no-repeat fixed top;*/
     background-size: cover;
     display: flex;
     justify-content: space-around;
@@ -36,6 +36,7 @@ div#app {
     border: 1px solid rgba(27,31,35,.15);
     border-radius: 6px;
     text-decoration: none;
+    z-index: 9;
 }
 /*Header*/
 .page-header {
@@ -525,9 +526,9 @@ div#app {
     margin: 10px 0;
 }
 
-#particles{
+#particles {
     position: absolute;
-    height: calc(100% - 50px);
+    height: 100%;
     width: 100%;
 }
 

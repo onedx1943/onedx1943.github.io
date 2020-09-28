@@ -13,7 +13,6 @@ export default {
 
     methods: {
         toPage: function (link) {
-            console.log(link)
             this.$router.push(link)
         }
     },
