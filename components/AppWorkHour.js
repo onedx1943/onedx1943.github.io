@@ -158,9 +158,20 @@ export default {
             return time.getMonth() + 1 + '-' + time.getDate()
         },
 
+         significantDigits: function (num) {
+            let digits = Number.parseFloat(num);
+            if (Number.isNaN(digits)) {
+                return '00'
+            } else if (digits < 10) {
+                return `0${digits}`
+            } else {
+                return `${digits}`
+            }
+         },
+
         timeFormat: function (time_range) {
             if (time_range) {
-                return `${new Date(time_range[0]).getHours().toString()}:${new Date(time_range[0]).getMinutes().toString()} - ${new Date(time_range[1]).getHours().toString()}:${new Date(time_range[1]).getMinutes().toString()}`;
+                return `${this.significantDigits(new Date(time_range[0]).getHours().toString())}:${this.significantDigits(new Date(time_range[0]).getMinutes().toString())} - ${this.significantDigits(new Date(time_range[1]).getHours().toString())}:${this.significantDigits(new Date(time_range[1]).getMinutes().toString())}`;
             } else {
                 return ''
             }
