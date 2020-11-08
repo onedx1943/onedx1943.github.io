@@ -429,6 +429,7 @@ div#app {
 .music-lyrics div {
     min-height: 31px;
     line-height: 31px;
+    margin: 9.5px 0;
 }
 .music-lyrics div.active{
     color: cornflowerblue;
@@ -547,4 +548,53 @@ div#app {
 }
 .el-card {
     background-color: #FFF0;
+}
+
+/*work hour*/
+.work_hour_input {
+    width: 220px;
+}
+.date-list {
+    display: grid;
+    grid-template-columns: repeat(7, 14.8%);
+    gap: 2px 1px;
+    place-content: center;
+    place-items: center;
+    max-width: 1450px;
+    margin: auto;
+}
+.title-content {
+    width: 160px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.date-content {
+    width: 160px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    cursor: pointer;
+    transition: .3s;
+    user-select: none;
+    color: #b1b1b1;
+    border: 1px solid;
+}
+.current_month {
+    color: #000;
+}
+.date-content-row {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    margin: 10px 10px 3px;
+}
+.account_time {
+    line-height: 28px;
+}
+.date-content-setting {
+    width: 40px;
+    text-align: center;
 }

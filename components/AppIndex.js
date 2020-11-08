@@ -6,6 +6,7 @@ export default {
                 {name: 'Novels', link: '/app/novel'},
                 {name: 'Music', link: '/app/music'},
                 {name: 'Video', link: '/app/video'},
+                {name: 'Work Hour', link: '/app/work-hour'},
             ],
             msg: '欢迎来到 App 首页',
         }

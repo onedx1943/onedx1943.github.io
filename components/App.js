@@ -45,6 +45,10 @@ export default {
                                 <i class="el-icon-monitor"></i>
                                 <span slot="title">Video</span>
                             </el-menu-item>
+                            <el-menu-item index="/app/work-hour">
+                                <i class="el-icon-date"></i>
+                                <span slot="title">Work Hour</span>
+                            </el-menu-item>
                         </el-menu>
                     </page-sidebar>
                     <div class="app-item-content">
