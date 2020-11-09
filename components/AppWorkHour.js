@@ -5,6 +5,7 @@ export default {
             work_hour: 0,
             total_hour: 0,
             date_list: [],
+            today: new Date(new Date().toLocaleDateString()).getTime(),
         }
     },
 
@@ -299,7 +300,7 @@ export default {
                     :key="name">{{ name }}</div>
                 <div class="date-content" 
                     v-for="date in date_list" 
-                    :class="{'current_month': date.is_current_month}" :key="date.date">
+                    :class="{'current_month': date.is_current_month, 'today': new Date(date.date).getTime() == today, 'yesterday': new Date(date.date).getTime() < today}" :key="date.date">
                     <div class="date-content-row">
                         <div>{{ dateFormat(date.date) }}</div>
                         <div>
