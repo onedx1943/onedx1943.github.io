@@ -69,7 +69,7 @@ export default {
         window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame;
         window.cancelAnimationFrame = window.cancelAnimationFrame || window.webkitCancelAnimationFrame || window.mozCancelAnimationFrame || window.msCancelAnimationFrame;
         this.jsMediaTags = window.jsmediatags;
-        this.getMusicLyrics(this.lyricsApi);
+        this.getMusicLyrics(this.custom_api);
         this.getMusicList(this.music_api);
     },
 

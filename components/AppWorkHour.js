@@ -132,7 +132,8 @@ export default {
                 next_day = 7 - weekday;
             }
             // 添加下月的日期
-            for (let i = this.date_list.length; i < 42; i++) {
+            let next_mouth_days = 42 - this.date_list.length;
+            for (let i = 0; i < next_mouth_days; i++) {
                 this.date_list.push({
                     is_current_month: false,
                     date: new Date(days_of_mouth[days_of_mouth.length - 1].getTime() + (i + 1) * one_day).toLocaleDateString(),
