@@ -47,7 +47,6 @@ export default {
             musicAlbum: '',
             musicArtist: '',
             lyricsList: [],
-            lyricsApi: 'https://api.github.com/repos/onedx1943/Music/contents/lrc',
             lyricsContent: [],
             musicLyricsMsg: '',
         }
@@ -69,7 +68,7 @@ export default {
         window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame;
         window.cancelAnimationFrame = window.cancelAnimationFrame || window.webkitCancelAnimationFrame || window.mozCancelAnimationFrame || window.msCancelAnimationFrame;
         this.jsMediaTags = window.jsmediatags;
-        this.getMusicLyrics(this.custom_api);
+        this.getMusicLyrics(this.music_api);
         this.getMusicList(this.music_api);
     },
 
@@ -374,6 +373,8 @@ export default {
             this.filterText = '';
             if (reg.test(this.custom_api)) {
                 this.getMusicList(this.custom_api);
+                this.lyricsList.length = 0;
+                this.getMusicLyrics(this.custom_api);
             } else {
                 this.tips_msg = '别瞎填链接~';
                 this.music_msg = '链接格式：https://api.github.com/repos/用户名/仓库名/contents（仓库内具体路径可以接着加 /xxx/xxx）';
