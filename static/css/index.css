@@ -112,6 +112,7 @@ div#app {
     padding: 0 60px 30px;
     height: 100%;
     overflow-x: hidden;
+    overflow-y: auto;
     overflow-y: overlay;
 }
 /*sidebar*/
@@ -122,6 +123,7 @@ div#app {
     left: 0;
     bottom: 0;
     overflow-x: hidden;
+    overflow-y: auto;
     overflow-y: overlay;
     background-color: #f9f9f9;
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
@@ -264,6 +266,7 @@ div#app {
 }
 .novel-list-content{
     height: 228px;
+    overflow-y: auto;
     overflow-y: overlay;
     margin: 10px;
     padding-right: 17px;
@@ -317,6 +320,7 @@ div#app {
     height: 36px;
 }
 .novel_content > pre {
+    overflow-y: auto;
     overflow-y: overlay;
     max-height: 600px;
     width: 100%;
@@ -420,6 +424,7 @@ div#app {
 }
 .music-lyrics {
     height: 279px;
+    overflow: auto;
     overflow: overlay;
     font-size: 18px;
     margin: 15px 0;

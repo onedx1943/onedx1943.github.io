@@ -36,7 +36,7 @@ export default {
                 {value: '6.7px', label: '八号'},
             ],
             font_family: 'Microsoft YaHei',
-            bg_color: '#f5edd4',
+            bg_color: '#ffffff',
             predefine_bg_colors: [
                 '#ffffff',
                 '#f9f6ed',
