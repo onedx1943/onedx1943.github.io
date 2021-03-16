@@ -30,9 +30,11 @@ export default {
         let mouth_time = localStorage.getItem(mouth);
         if (mouth_time) {
             let mouth_time_obj = JSON.parse(mouth_time);
-            this.start_date = new Date(mouth_time_obj.date)
+            this.start_date = new Date(mouth_time_obj.date);
+            this.work_hour = mouth_time_obj.work_hour
         } else {
-            this.start_date = date
+            this.start_date = date;
+            this.work_hour = 0
         }
         this.work_mouth_picker(this.start_date);
     },
@@ -45,6 +47,7 @@ export default {
             if (mouth_time) {
                 let mouth_time_obj = JSON.parse(mouth_time);
                 mouth_time_obj.date = date;
+                this.work_hour = mouth_time_obj.work_hour;
                 localStorage.setItem(mouth, JSON.stringify(mouth_time_obj))
             } else {
                 this.work_hour = 0;
