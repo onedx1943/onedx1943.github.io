@@ -402,10 +402,17 @@ export default {
                         </div>
                         <div class="novel_chapter">{{ novel_chapter[novel_page - 1] }}</div>
                         <div class="novel_content">
-                            <pre :style="{'font-size': font_size, 'font-family': font_family, 'background-color': bg_color, 'color': color, 'width': width + 'px', 'max-height': height + 'px', 'max-width': max_width + 'px'}">{{ novel_content[novel_page - 1] }}</pre>
+                            <pre :style="{'font-size': font_size, 'font-family': font_family, 'background-color': bg_color, 'color': color, 'width': width + 'px', 'max-height': height + 'px', 'max-width': max_width + 'px'}">
+                                <span>{{ novel_content[novel_page - 1] }}</span>
+                                <div v-if="novel_chapter.length > 1" class="turn_page">
+                                    <el-button plain @click="pre_page" icon="el-icon-arrow-left">{{ novel_chapter[novel_page - 2] }}</el-button>
+                                    <div>{{ novel_chapter[novel_page - 1] }}</div>
+                                    <el-button plain @click="next_page">{{ novel_chapter[novel_page] }}<i class="el-icon-arrow-right el-icon--right"></i></el-button>
+                                </div>
+                            </pre>
                             <div v-if="novel_chapter.length > 1" class="turn_page">
                                 <el-button plain @click="pre_page">上一章</el-button>
-                                {{ novel_page }}
+                                <div>{{ novel_page }}</div>
                                 <el-button plain @click="next_page">下一章</el-button>
                             </div>
                         </div>
