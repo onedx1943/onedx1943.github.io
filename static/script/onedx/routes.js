@@ -12,6 +12,7 @@ import AppNovels from '../../../components/AppNovels.js';
 import AppMusic from '../../../components/AppMusic.js';
 import AppVideo from '../../../components/AppVideo.js';
 import AppWorkHour from '../../../components/AppWorkHour.js';
+import AppPicture from '../../../components/AppPicture.js';
 
 import Blog from '../../../components/Blog.js';
 
@@ -26,6 +27,7 @@ const routes = [
           { path: 'music', component: AppMusic },
           { path: 'video', component: AppVideo },
           { path: 'work-hour', component: AppWorkHour },
+          { path: 'picture', component: AppPicture },
       ]
     },
     { path: '/blog', component: Blog },

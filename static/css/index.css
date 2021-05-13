@@ -612,3 +612,47 @@ div#app {
 .current_month:hover {
     box-shadow: 0 0 8px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
 }
+
+
+.custom-picture-list {
+    margin-top: 15px;
+    height: calc(100vh - 300px);
+    overflow-y: auto;
+}
+.custom-picture-list .el-image {
+    background: #000000;
+    margin: 1px 4px;
+}
+.custom-picture-list .image-slot {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background: #f5f7fa;
+    color: #909399;
+    font-size: 30px;
+    border-radius: 0;
+}
+/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+::-webkit-scrollbar{
+    width: 5px;
+    height: 5px;
+    background-color: #F5F5F5;
+}
+
+/*定义滚动条轨道 内阴影+圆角*/
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background-color: #F5F5F5;
+}
+
+/*定义滑块 内阴影+圆角*/
+::-webkit-scrollbar-thumb{
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, .1);
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .1);
+    background-color: #aaaaaa;
+}

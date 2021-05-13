@@ -5,6 +5,7 @@ export default {
                 {name: 'Icon', link: '/app/icon'},
                 {name: 'Novels', link: '/app/novel'},
                 {name: 'Music', link: '/app/music'},
+                {name: 'Picture', link: '/app/picture'},
                 {name: 'Video', link: '/app/video'},
                 {name: 'Work Hour', link: '/app/work-hour'},
             ],

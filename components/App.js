@@ -41,6 +41,10 @@ export default {
                                 <i class="el-icon-headset"></i>
                                 <span slot="title">Music</span>
                             </el-menu-item>
+                            <el-menu-item index="/app/picture">
+                                <i class="el-icon-picture-outline"></i>
+                                <span slot="title">Picture</span>
+                            </el-menu-item>
                             <el-menu-item index="/app/video">
                                 <i class="el-icon-monitor"></i>
                                 <span slot="title">Video</span>
