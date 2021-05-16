@@ -6,6 +6,7 @@ export default {
             custom_api: 'https://api.github.com/repos/onedx1943/Picture/contents',
             filterText: '',
             loading: false,
+            gifUrl: "https://raw.githubusercontent.com/onedx1943/Picture/master/png/sticker87.png"
         }
     },
 
@@ -37,7 +38,8 @@ export default {
                         _this.picture_list.push({
                             url: response.data[i].download_url,
                             id: response.data[i].sha,
-                            name: response.data[i].name
+                            name: response.data[i].name,
+                            isGif: response.data[i].name.endsWith('.gif')
                         });
                     } else if (response.data[i].type === 'dir') {
                         _this.loadData(response.data[i].url);
@@ -101,7 +103,7 @@ export default {
                     <el-image 
                         v-for="item in picture_show" 
                         :key="item.id" 
-                        :src="item.url"
+                        :src="item.isGif ? gifUrl : item.url"
                         :preview-src-list="[item.url]"
                         style="width: 200px; height: 200px"
                         fit="scale-down"
