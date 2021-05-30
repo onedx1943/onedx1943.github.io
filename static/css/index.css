@@ -634,6 +634,10 @@ div#app {
     font-size: 30px;
     border-radius: 0;
 }
+
+.custom-picture-list .el-image .el-image-viewer__close {
+    top: 80px;
+}
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
 ::-webkit-scrollbar{
     width: 5px;
@@ -655,4 +659,13 @@ div#app {
     box-shadow: inset 0 0 6px rgba(0, 0, 0, .1);
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .1);
     background-color: #aaaaaa;
+}
+.gif-container {
+    width: 200px;
+    height: 200px;
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    background: #000000;
+    margin: 1px 4px;
 }

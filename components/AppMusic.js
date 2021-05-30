@@ -82,21 +82,21 @@ export default {
     },
 
     methods: {
-        getMusicList: function (file_api) {
+        getMusicList: async function (file_api) {
             let _this = this;
             _this.music_msg = '别着急，正在查找音乐文件！';
-            axios.get(file_api, {
+            await axios.get(file_api, {
                 headers: {
                     'Authorization': this.GLOBAL.token
                 }
-            }).then(function (response) {
+            }).then(async function (response) {
                 _this.limitNotification(response.headers);
                 for(let i = 0; i < response.data.length; i++){
                     if (response.data[i].name.endsWith('.mp3') || response.data[i].name.endsWith('.flac')) {
                         _this.music_list.push(response.data[i])
                     } else if (response.data[i].type === 'dir') {
                         let new_url = file_api + '/' + response.data[i].name;
-                        _this.getMusicList(new_url);
+                        await _this.getMusicList(new_url);
                     }
                 }
             }).catch(function (error) {

@@ -34,13 +34,27 @@ export default {
                 _this.limitNotification(response.headers);
                 let data = [];
                 for(let i = 0; i < response.data.length; i++){
-                    if (response.data[i].name.endsWith('.gif') || response.data[i].name.endsWith('.png')) {
-                        _this.picture_list.push({
-                            url: response.data[i].download_url,
-                            id: response.data[i].sha,
-                            name: response.data[i].name,
-                            isGif: response.data[i].name.endsWith('.gif')
-                        });
+                    if (response.data[i].type === 'file' && (response.data[i].name.endsWith('.gif') || response.data[i].name.endsWith('.png'))) {
+                        if (response.data[i].name.endsWith('.gif')) {
+                            _this.picture_list.push({
+                                show_url: response.data[i].download_url.substring(0, response.data[i].download_url.lastIndexOf(".")) + '.jpg',
+                                id: response.data[i].sha,
+                                name: response.data[i].name,
+                                preview_url: response.data[i].download_url.substring(0, response.data[i].download_url.lastIndexOf(".")) + '.mp4',
+                                download_url: response.data[i].download_url,
+                                is_gif: true
+                            });
+                        } else {
+                            _this.picture_list.push({
+                                show_url: response.data[i].download_url,
+                                id: response.data[i].sha,
+                                name: response.data[i].name,
+                                preview_url: response.data[i].download_url,
+                                download_url: response.data[i].download_url,
+                                is_gif: false
+                            });
+                        }
+
                     } else if (response.data[i].type === 'dir') {
                         _this.loadData(response.data[i].url);
                     }
@@ -103,8 +117,8 @@ export default {
                     <el-image 
                         v-for="item in picture_show" 
                         :key="item.id" 
-                        :src="item.isGif ? gifUrl : item.url"
-                        :preview-src-list="[item.url]"
+                        :src="item.show_url"
+                        :preview-src-list="[item.download_url]"
                         style="width: 200px; height: 200px"
                         fit="scale-down"
                         lazy>
