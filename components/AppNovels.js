@@ -5,6 +5,10 @@ export default {
                 return ''
             }
             return '第' + value + '页';
+        },
+
+        interceptStr: function (value) {
+            return (value || '').replaceAll("\r|\n", "").trim().slice(0, 25);
         }
     },
 
@@ -65,6 +69,7 @@ export default {
             node_had: undefined,
             resolve_had : undefined,
             loading: false,
+            dialogVisible: false,
         }
     },
 
@@ -178,7 +183,7 @@ export default {
                         _this.loading = false;
                         return
                     }
-                    let reg = /.*[第]{1,2}[0-9零○一二两三四五六七八九十百千廿卅卌壹贰叁肆伍陆柒捌玖拾佰仟万１２３４５６７８９０]{1,5}[章节節堂讲回集部分品]{1,2}.*/g;
+                    let reg = /\n\s*[第]{1,2}[0-9零○一二两三四五六七八九十百千廿卅卌壹贰叁肆伍陆柒捌玖拾佰仟万１２３４５６７８９０]{1,5}[章节節堂讲回集部分品]{1,2}.*/g;
                     let chapter = response.data.match(reg);
                     if (chapter) {
                         chapter.unshift(_this.novel_name);
@@ -316,7 +321,7 @@ export default {
                     <div class="novel-container" 
                         v-loading="loading"
                         element-loading-text="拼命加载中"
-                        element-loading-background="rgba(0, 0, 0, 0.8)">
+                        element-loading-background="rgba(255, 255, 255, 0.8)">
                         <div class="novel-operate">
                             <div>
                                 <div v-if="novel_page > 0 && novel_page <= novel_chapter.length">
@@ -330,6 +335,9 @@ export default {
                                         :hide-on-single-page="true">
                                     </el-pagination>
                                 </div>
+                            </div>
+                            <div v-if="novel_page > 0 && novel_page <= novel_chapter.length">
+                                <el-button type="success" size="mini" @click="dialogVisible=true">阅读模式</el-button>
                             </div>
                             <div>
                                 <el-popover
@@ -397,17 +405,14 @@ export default {
                                 </el-popover>
                             </div>
                         </div>
-                        <div v-else-if="novel_chapter.length > 0">
-                            <button @click="novel_page=1"><i class="fa fa-rotate-right"></i></button>
-                        </div>
                         <div class="novel_chapter">{{ novel_chapter[novel_page - 1] }}</div>
                         <div class="novel_content">
                             <pre :style="{'font-size': font_size, 'font-family': font_family, 'background-color': bg_color, 'color': color, 'width': width + 'px', 'max-height': height + 'px', 'max-width': max_width + 'px'}">
                                 <span>{{ novel_content[novel_page - 1] }}</span>
                                 <div v-if="novel_chapter.length > 1" class="turn_page">
-                                    <el-button plain @click="pre_page" icon="el-icon-arrow-left">{{ novel_chapter[novel_page - 2] }}</el-button>
-                                    <div>{{ novel_chapter[novel_page - 1] }}</div>
-                                    <el-button plain @click="next_page">{{ novel_chapter[novel_page] }}<i class="el-icon-arrow-right el-icon--right"></i></el-button>
+                                    <el-button plain @click="pre_page" icon="el-icon-arrow-left">{{ novel_chapter[novel_page - 2] | interceptStr }}</el-button>
+                                    <div>{{ novel_chapter[novel_page - 1] | interceptStr }}</div>
+                                    <el-button plain @click="next_page">{{ novel_chapter[novel_page] | interceptStr }}<i class="el-icon-arrow-right el-icon--right"></i></el-button>
                                 </div>
                             </pre>
                             <div v-if="novel_chapter.length > 1" class="turn_page">
@@ -419,6 +424,27 @@ export default {
                     </div>
                 </el-collapse-item>
             </el-collapse>
+            <el-dialog
+                :visible.sync="dialogVisible"
+                :fullscreen="true"
+                :modal="false"
+                custom-class="custom-dialog">
+                <div class="novel_content">
+                    <pre :style="{'font-size': font_size, 'font-family': font_family, 'background-color': bg_color, 'color': color, 'width': 'calc(100vw - 40px)', 'max-height': 'calc(100vh - 130px)', 'max-width': '99%'}">
+                        <span>{{ novel_content[novel_page - 1] }}</span>
+                        <div v-if="novel_chapter.length > 1" class="turn_page">
+                            <el-button plain @click="pre_page" icon="el-icon-arrow-left">{{ novel_chapter[novel_page - 2] | interceptStr }}</el-button>
+                            <div>{{ novel_chapter[novel_page - 1] | interceptStr }}</div>
+                            <el-button plain @click="next_page">{{ novel_chapter[novel_page] | interceptStr }}<i class="el-icon-arrow-right el-icon--right"></i></el-button>
+                        </div>
+                    </pre>
+                    <div v-if="novel_chapter.length > 1" class="turn_page">
+                        <el-button plain @click="pre_page">上一章</el-button>
+                        <div>{{ novel_page }}</div>
+                        <el-button plain @click="next_page">下一章</el-button>
+                    </div>
+                </div>
+            </el-dialog>
         </div>
     `,
 }
