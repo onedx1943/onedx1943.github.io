@@ -430,7 +430,7 @@ export default {
                 :modal="false"
                 custom-class="custom-dialog">
                 <div class="novel_content">
-                    <pre :style="{'font-size': font_size, 'font-family': font_family, 'background-color': bg_color, 'color': color, 'width': 'calc(100vw - 40px)', 'max-height': 'calc(100vh - 130px)', 'max-width': '99%'}">
+                    <pre :style="{'font-size': font_size, 'font-family': font_family, 'background-color': bg_color, 'color': color, 'width': 'calc(100vw - 40px)', 'max-height': 'calc(100vh - 130px)', 'max-width': '99%', 'line-height': '1.5'}">
                         <span>{{ novel_content[novel_page - 1] }}</span>
                         <div v-if="novel_chapter.length > 1" class="turn_page">
                             <el-button plain @click="pre_page" icon="el-icon-arrow-left">{{ novel_chapter[novel_page - 2] | interceptStr }}</el-button>
