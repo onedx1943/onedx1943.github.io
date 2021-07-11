@@ -344,6 +344,9 @@ div#app {
 .custom-dialog .el-dialog__body {
     padding: 0;
 }
+.load-local-btn {
+    margin: 0 28px;
+}
 
 /*music*/
 .music-header-collapse {

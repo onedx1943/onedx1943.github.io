@@ -168,6 +168,14 @@ export default {
         },
 
         handleNodeClick: function (data) {
+            if (this.loading) {
+                return this.$notify({
+                    type: 'info',
+                    title: '提示',
+                    message: '请等待当前文件加载完成~',
+                    offset: 60
+                });
+            }
             if (data.isLeaf) {
                 let _this = this;
                 // $('.novel-list .active-novel').removeClass('active-novel');
@@ -279,6 +287,61 @@ export default {
                 this.novel_chapter = ['下面是提示信息：'];
                 this.novel_content = ['链接格式：https://api.github.com/repos/用户名/仓库名/contents（仓库内具体路径可以接着加 /xxx/xxx）'];
             }
+        },
+        selectFile: function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            $('#local_file').click();
+        },
+        uploadLocalFile: function (event) {
+            if (this.loading) {
+                $('#local_file').val('');
+                return this.$notify({
+                    type: 'info',
+                    title: '提示',
+                    message: '请等待当前文件加载完成~',
+                    offset: 60
+                });
+            }
+            let files = event?.target?.files || [];
+            if (files.length === 0) {
+                return
+            }
+            let file = files[0];
+            let _this = this;
+            let reader = new FileReader();
+            reader.onload = function() {
+                let fileData = this.result;
+                if (fileData === '') {
+                    _this.novel_content = ['该文件内容为空，还是看看别的吧'];
+                    _this.loading = false;
+                    return
+                }
+                let reg = /\n\s*[第]{1,2}[0-9零○一二两三四五六七八九十百千廿卅卌壹贰叁肆伍陆柒捌玖拾佰仟万１２３４５６７８９０]{1,5}[章节節堂讲回集部分品]{1,2}.*/g;
+                let chapter = fileData.match(reg);
+                if (chapter) {
+                    chapter.unshift(_this.novel_name);
+                } else {
+                    chapter = [_this.novel_name];
+                    if (fileData.length > 1024 * 1024) {
+                        _this.novel_content = ['没找到章节名，而且内容还挺大，是不是文件编码有问题'];
+                        _this.loading = false;
+                        return
+                    }
+                }
+                _this.novel_chapter = chapter;
+                _this.novel_content = fileData.split(reg);
+                _this.novel_page = 1;
+                _this.getChapterFromSession();
+                _this.loading = false;
+                $('#local_file').val('');
+            };
+            _this.loading = true;
+            _this.novel_name = file.name;
+            _this.novel_chapter = ['提示：'];
+            _this.novel_content = ['正在读取...'];
+            _this.novel_page = 1;
+            reader.readAsText(file);
         }
     },
 
@@ -317,7 +380,9 @@ export default {
                 <el-collapse-item name="2">
                     <template slot="title">
                         <i class="header-icon el-icon-document"></i>{{ novel_name }}
+                        <el-button type="primary" plain size="small" class="load-local-btn" @click="selectFile($event)">打开本地TXT文件</el-button>
                     </template>
+                    <input type="file" id="local_file" accept=".txt" style="display: none" @change="uploadLocalFile($event)"/>
                     <div class="novel-container" 
                         v-loading="loading"
                         element-loading-text="拼命加载中"
